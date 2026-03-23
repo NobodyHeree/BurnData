@@ -1,0 +1,56 @@
+import { z } from 'zod';
+
+// Schema definitions for IPC handlers
+export const schemas = {
+    // Store
+    storeKey: z.string().min(1).max(100),
+
+    // Tokens
+    platform: z.string().min(1).max(50),
+    token: z.string().min(1),
+
+    // Discord
+    discordGuildId: z.string().regex(/^\d+$/),
+    discordChannelId: z.string().regex(/^\d+$/),
+    discordUserId: z.string().regex(/^\d+$/),
+
+    discordDeletionConfig: z.object({
+        token: z.string().min(1),
+        userId: z.string().regex(/^\d+$/),
+        mode: z.enum(['simple', 'advanced']),
+        dms: z.array(z.string()).optional(),
+        guilds: z.array(z.string()).optional(),
+        channels: z.array(z.object({
+            guildId: z.string(),
+            channelId: z.string(),
+            channelName: z.string().optional(),
+        })).optional(),
+        filters: z.object({
+            startDate: z.string().optional(),
+            endDate: z.string().optional(),
+            includeKeywords: z.array(z.string()).optional(),
+            excludeKeywords: z.array(z.string()).optional(),
+            hasAttachments: z.boolean().optional(),
+            minLength: z.number().optional(),
+            maxLength: z.number().optional(),
+        }).optional(),
+    }),
+
+    // PSN
+    psnNpsso: z.string().min(30).max(200),
+    psnAccountIds: z.array(z.string().min(1)),
+    psnAccountId: z.string().min(1),
+};
+
+/**
+ * Validates IPC handler input and returns typed result.
+ * Throws a user-friendly error on validation failure.
+ */
+export function validateIPC<T>(schema: z.ZodSchema<T>, data: unknown, handlerName: string): T {
+    const result = schema.safeParse(data);
+    if (!result.success) {
+        const errors = result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+        throw new Error(`[IPC:${handlerName}] Invalid input: ${errors}`);
+    }
+    return result.data;
+}

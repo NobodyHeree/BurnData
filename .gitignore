@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+dist-electron/
+release/
+.next/
+out/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage/
+
+# Cache
+.cache/
+.parcel-cache/
+.turbo/
+
+# Electron
+*.asar
+
+# Claude Code
+.claude/
+
+# Dev screenshots (may contain personal data)
+*.png
+*.jpg
+*.jpeg
+images*/
+
+# CLI sensitive files
+apps/cli/config.yaml
+apps/cli/*-state.json
+apps/cli/*-service.log
+apps/cli/*.log
+
+# Legacy
+redact-clone/

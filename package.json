@@ -1,0 +1,42 @@
+{
+  "name": "burndata",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mass delete your social media data - Redact.dev alternative",
+  "scripts": {
+    "dev": "pnpm --filter @burndata/desktop dev",
+    "dev:web": "pnpm --filter @burndata/web dev",
+    "build": "pnpm -r build",
+    "build:desktop": "pnpm --filter @burndata/desktop build",
+    "build:web": "pnpm --filter @burndata/web build",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "clean": "pnpm -r clean"
+  },
+  "keywords": ["redact", "delete", "discord", "twitter", "reddit", "privacy"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.4.0",
+    "vitest": "^3.2.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["electron"]
+  }
+}

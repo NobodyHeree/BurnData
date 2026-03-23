@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "skipLibCheck": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "baseUrl": ".",
+        "paths": {
+            "@services/*": ["../../packages/services/src/*"],
+            "@core/*": ["../../packages/core/src/*"]
+        }
+    },
+    "include": [
+        "vite.config.ts",
+        "electron/**/*.ts",
+        "../../packages/services/src/**/*.ts",
+        "../../packages/core/src/**/*.ts"
+    ]
+}

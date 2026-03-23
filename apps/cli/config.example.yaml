@@ -1,0 +1,37 @@
+# BurnData CLI Configuration
+# Copy this file to config.yaml and fill in your values
+
+# Discord user token (required)
+# Get it from Discord DevTools > Network tab > Authorization header
+discord_token: "YOUR_TOKEN_HERE"
+
+# Discord webhook URL for notifications (optional but recommended)
+# Create a webhook in a Discord channel: Channel Settings > Integrations > Webhooks
+webhook_url: "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
+
+# Targets: list of DM channel IDs to clean
+# Find channel IDs by right-clicking a DM in Discord > Copy Channel ID
+targets:
+  - channel_id: "CHANNEL_ID_HERE"
+    label: "example"
+  # - channel_id: "1234567890123456789"
+  #   label: "someone else"
+
+# Data package ZIP path (optional)
+# Import your Discord data export to skip scanning
+# data_package: "/path/to/discord-data.zip"
+
+# Speed preset: conservative | balanced | aggressive
+speed: balanced
+
+# Notification frequency: how often to send progress updates (in messages deleted)
+notify_every: 100
+
+# Auto-resume: if true, resumes from last checkpoint on restart
+auto_resume: true
+
+# State file: where to save progress for resume
+state_file: "./burndata-state.json"
+
+# Log file (optional)
+log_file: "./burndata.log"
