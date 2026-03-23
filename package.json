@@ -19,7 +19,14 @@
     "test:coverage": "vitest run --coverage",
     "clean": "pnpm -r clean"
   },
-  "keywords": ["redact", "delete", "discord", "twitter", "reddit", "privacy"],
+  "keywords": [
+    "redact",
+    "delete",
+    "discord",
+    "twitter",
+    "reddit",
+    "privacy"
+  ],
   "author": "",
   "license": "MIT",
   "engines": {
@@ -27,16 +34,19 @@
     "pnpm": ">=8.0.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-config-prettier": "^9.1.0",
+    "jsdom": "^29.0.1",
     "prettier": "^3.4.0",
     "vitest": "^3.2.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["electron"]
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
   }
 }
