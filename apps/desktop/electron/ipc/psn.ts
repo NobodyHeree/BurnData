@@ -40,7 +40,7 @@ async function getPSNServiceWithRefresh(store: Store): Promise<PSNService> {
                 }
                 return new PSNService(result.accessToken);
             } catch (err) {
-                console.error('[PSN] Token refresh failed:', err);
+                console.error('[PSN] Token refresh failed:', (err as Error).message);
                 // Fall through to try existing token
             }
         }
