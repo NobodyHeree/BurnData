@@ -49,6 +49,10 @@ coverage/
 *.jpeg
 images*/
 
+# But keep readme screenshots and app icons
+!docs/screenshots/*.png
+!apps/desktop/build/icon.png
+
 # CLI sensitive files
 apps/cli/config.yaml
 apps/cli/*-state.json
