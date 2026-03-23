@@ -91,25 +91,16 @@ export class DiscordService {
         return h;
     }
 
-    /**
-     * Get current user
-     */
     async getMe(): Promise<DiscordUser> {
         return this.request<DiscordUser>('GET', '/users/@me');
     }
 
-    /**
-     * Delay with exponential backoff and jitter
-     */
     private async delay(attempt: number = 0, baseMs: number = 500): Promise<void> {
         const exponentialDelay = Math.min(baseMs * Math.pow(2, attempt), 10000);
         const jitter = Math.random() * 500;
         await new Promise(resolve => setTimeout(resolve, exponentialDelay + jitter));
     }
 
-    /**
-     * Parse rate limit headers from an Axios response
-     */
     private parseRateLimitHeaders(headers?: Record<string, unknown>): RateLimitInfo {
         if (!headers) {
             return { remaining: null, resetAfterMs: null, limit: null, bucket: null };
@@ -195,9 +186,6 @@ export class DiscordService {
         throw new Error('Max retries exceeded');
     }
 
-    /**
-     * Convenience wrapper that returns only data (backwards compatible)
-     */
     private async request<T>(
         method: 'GET' | 'POST' | 'DELETE',
         endpoint: string,
@@ -208,39 +196,24 @@ export class DiscordService {
         return result.data;
     }
 
-    /**
-     * Validate the token and get user info
-     */
     async validateToken(): Promise<DiscordUser> {
         const user = await this.request<DiscordUser>('GET', '/users/@me');
         this.userId = user.id;
         return user;
     }
 
-    /**
-     * Get user's guilds (servers)
-     */
     async getGuilds(): Promise<DiscordGuild[]> {
         return this.request<DiscordGuild[]>('GET', '/users/@me/guilds');
     }
 
-    /**
-     * Get user's DM channels
-     */
     async getDMChannels(): Promise<DiscordChannel[]> {
         return this.request<DiscordChannel[]>('GET', '/users/@me/channels');
     }
 
-    /**
-     * Get channels in a guild
-     */
     async getGuildChannels(guildId: string): Promise<DiscordChannel[]> {
         return this.request<DiscordChannel[]>('GET', `/guilds/${guildId}/channels`);
     }
 
-    /**
-     * Search for messages in a channel/guild
-     */
     async searchMessages(
         channelId: string,
         options: {
@@ -258,9 +231,6 @@ export class DiscordService {
         return this.request<DiscordMessage[]>('GET', endpoint);
     }
 
-    /**
-     * Delete a single message
-     */
     async deleteMessage(channelId: string, messageId: string): Promise<boolean> {
         try {
             await this.request('DELETE', `/channels/${channelId}/messages/${messageId}`);
@@ -273,9 +243,7 @@ export class DiscordService {
         }
     }
 
-    /**
-     * Delete a single message and return rate limit info for dynamic delay
-     */
+    // Like deleteMessage but also returns rate limit headers
     async deleteMessageWithRateInfo(channelId: string, messageId: string): Promise<DeleteResult> {
         try {
             const result = await this.requestRaw('DELETE', `/channels/${channelId}/messages/${messageId}`);
@@ -293,45 +261,27 @@ export class DiscordService {
         }
     }
 
-    /**
-     * Filter messages based on criteria
-     */
     filterMessages(messages: DiscordMessage[], filter: DeletionFilter): DiscordMessage[] {
         return messages.filter(msg => {
-            // Only user's own messages
             if (msg.author.id !== this.userId) return false;
 
-            // Keyword filter
             if (filter.keywords?.length) {
-                const hasKeyword = filter.keywords.some(kw =>
+                const match = filter.keywords.some(kw =>
                     msg.content.toLowerCase().includes(kw.toLowerCase())
                 );
-                if (!hasKeyword) return false;
+                if (!match) return false;
             }
-
-            // Exclude keywords
             if (filter.excludeKeywords?.length) {
-                const hasExcluded = filter.excludeKeywords.some(kw =>
+                const excluded = filter.excludeKeywords.some(kw =>
                     msg.content.toLowerCase().includes(kw.toLowerCase())
                 );
-                if (hasExcluded) return false;
+                if (excluded) return false;
             }
 
-            // Date range
-            if (filter.dateFrom) {
-                if (new Date(msg.timestamp) < filter.dateFrom) return false;
-            }
-            if (filter.dateTo) {
-                if (new Date(msg.timestamp) > filter.dateTo) return false;
-            }
+            if (filter.dateFrom && new Date(msg.timestamp) < filter.dateFrom) return false;
+            if (filter.dateTo && new Date(msg.timestamp) > filter.dateTo) return false;
 
-            // Attachments filter
-            if (filter.hasAttachments !== undefined) {
-                const hasAttachments = msg.attachments.length > 0;
-                if (filter.hasAttachments !== hasAttachments) return false;
-            }
-
-            // Content length
+            if (filter.hasAttachments !== undefined && filter.hasAttachments !== (msg.attachments.length > 0)) return false;
             if (filter.minLength && msg.content.length < filter.minLength) return false;
             if (filter.maxLength && msg.content.length > filter.maxLength) return false;
 
@@ -339,9 +289,6 @@ export class DiscordService {
         });
     }
 
-    /**
-     * Export messages to JSON
-     */
     async exportMessages(
         channelId: string,
         filter?: DeletionFilter
@@ -374,35 +321,22 @@ export class DiscordService {
 
         return filter ? this.filterMessages(allMessages, filter) : allMessages;
     }
-    /**
-     * Get messages from a channel (History API)
-     */
     async getChannelMessages(channelId: string, limit: number = 100, before?: string): Promise<DiscordMessage[]> {
         let url = `/channels/${channelId}/messages?limit=${limit}`;
         if (before) url += `&before=${before}`;
         return this.request<DiscordMessage[]>('GET', url);
     }
 
-    /**
-     * Get channel info by ID
-     */
     async getChannel(channelId: string): Promise<DiscordChannel> {
         return this.request<DiscordChannel>('GET', `/channels/${channelId}`);
     }
 
-    /**
-     * Create or retrieve a DM channel with a user
-     * If DM already exists, it returns the existing channel
-     */
     async createDMChannel(userId: string): Promise<DiscordChannel> {
         return this.request<DiscordChannel>('POST', '/users/@me/channels', {
             recipient_id: userId
         });
     }
 
-    /**
-     * Get user info by ID
-     */
     async getUser(userId: string): Promise<DiscordUser> {
         return this.request<DiscordUser>('GET', `/users/${userId}`);
     }

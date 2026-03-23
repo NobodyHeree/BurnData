@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
 
-export function JobManager() {
+export const JobManager = () => {
     useEffect(() => {
-        console.log('[JobManager] Mounting and setting up listeners');
-        // Discord progress listener
         const removeDiscordListener = window.electronAPI?.discord.onProgress((data: any) => {
             // data matches the shape we send from main:
             // { jobId, status, progress, stats: { deleted, checked }, details }
@@ -48,11 +46,8 @@ export function JobManager() {
         // PSN unfriend progress listener
         const removePSNListener = window.electronAPI?.psn.onUnfriendProgress((data: any) => {
             // data: { jobId, current, total, removed, failed, progress, completed }
-            console.log('[JobManager] PSN unfriend progress:', data);
-
             if (data.jobId) {
                 const jobStatus = data.completed ? 'completed' : 'running';
-                console.log('[JobManager] Job status:', jobStatus, 'completed flag:', data.completed);
 
                 // Check if we need to update Platform Stats (only on first transition to Completed)
                 const currentJob = useAppStore.getState().jobs.find(j => j.id === data.jobId);
@@ -82,7 +77,6 @@ export function JobManager() {
         });
 
         return () => {
-            console.log('[JobManager] Unmounting and cleaning up listeners');
             if (removeDiscordListener) removeDiscordListener();
             if (removePSNListener) removePSNListener();
         };

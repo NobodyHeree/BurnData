@@ -69,41 +69,31 @@ export class SmartRateLimiter {
         this.config = { ...PRESETS[preset] };
     }
 
-    /** Update config from preset (can be called mid-job for dynamic speed changes) */
     setPreset(preset: SpeedPreset) {
         this.config = { ...PRESETS[preset] };
     }
 
-    /** Update config directly */
     setConfig(config: Partial<RateLimitConfig>) {
         Object.assign(this.config, config);
     }
 
-    /** Pause the rate limiter */
     pause() { this._isPaused = true; }
-
-    /** Resume the rate limiter */
     resume() { this._isPaused = false; }
-
-    /** Cancel — breaks out of any wait */
     cancel() { this._isCancelled = true; this._isPaused = false; }
 
-    /** Reset cancel state for reuse */
-    reset() { this._isCancelled = false; this._isPaused = false; this.burstCount = 0; this.consecutive429s = 0; this.lastRequestTime = 0; this.stats.totalRequests = 0; }
+    reset() {
+        this._isCancelled = false;
+        this._isPaused = false;
+        this.burstCount = 0;
+        this.consecutive429s = 0;
+        this.lastRequestTime = 0;
+        this.stats.totalRequests = 0;
+    }
 
     get isPaused() { return this._isPaused; }
     get isCancelled() { return this._isCancelled; }
 
-    /**
-     * Wait for the appropriate delay based on the last request result.
-     * Call this AFTER each API request.
-     *
-     * @param wasRateLimited - true if the request got a 429 (already retried by axios)
-     * @param wasAlreadyDeleted - true if the message was 404 (already gone)
-     * @param rateLimitRemaining - x-ratelimit-remaining header value
-     * @param rateLimitResetMs - x-ratelimit-reset-after header value in ms
-     * @returns 'ok' | 'paused' | 'cancelled'
-     */
+    // Call after each DELETE. Handles burst pacing, rate limit headers, and pause/cancel.
     async waitAfterRequest(options: {
         wasAlreadyDeleted?: boolean;
         rateLimitRemaining?: number | null;
@@ -160,10 +150,7 @@ export class SmartRateLimiter {
         return pauseResult;
     }
 
-    /**
-     * Handle a 429 response. Call this when the request layer detects rate limiting.
-     * This adjusts internal state for escalation detection.
-     */
+    // Track 429s and escalate delays if they keep coming
     handleRateLimit(retryAfterMs: number) {
         this.consecutive429s++;
         this.stats.totalThrottled++;
@@ -186,7 +173,6 @@ export class SmartRateLimiter {
         this.burstCount = 0;
     }
 
-    /** Wait while paused, checking periodically */
     private async waitWhilePaused(): Promise<'ok' | 'cancelled'> {
         while (this._isPaused && !this._isCancelled) {
             await this.sleep(200);
@@ -194,7 +180,6 @@ export class SmartRateLimiter {
         return this._isCancelled ? 'cancelled' : 'ok';
     }
 
-    /** Sleep with cancellation support */
     private sleep(ms: number): Promise<void> {
         return new Promise(resolve => {
             let checkInterval: ReturnType<typeof setInterval> | null = null;
@@ -215,7 +200,6 @@ export class SmartRateLimiter {
         });
     }
 
-    /** Get estimated time remaining based on observed throughput */
     getETR(remainingMessages: number): number {
         if (this.stats.totalRequests < 2 || this.lastRequestTime === 0) {
             // Not enough data — estimate from config

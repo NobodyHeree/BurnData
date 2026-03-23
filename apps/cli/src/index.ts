@@ -49,22 +49,20 @@ function log(level: 'INFO' | 'WARN' | 'ERROR', message: string) {
 
 // --- Discord API helpers ---
 
-function headers() {
-    return {
-        'Authorization': config.discord_token,
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
-    };
-}
+const headers = () => ({
+    'Authorization': config.discord_token,
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+});
 
-function parseRateLimits(respHeaders: any): RateLimitInfo {
+const parseRateLimits = (respHeaders: any): RateLimitInfo => {
     const remaining = respHeaders?.['x-ratelimit-remaining'];
     const resetAfter = respHeaders?.['x-ratelimit-reset-after'];
     return {
         remaining: remaining !== undefined ? Number(remaining) : null,
         resetAfterMs: resetAfter !== undefined ? Number(resetAfter) * 1000 : null,
     };
-}
+};
 
 async function discordRequest<T>(method: string, endpoint: string, retries = 3): Promise<{ data: T; rateLimits: RateLimitInfo }> {
     let consecutive429s = 0;
@@ -509,9 +507,7 @@ async function main() {
     process.exit(0);
 }
 
-function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
 function formatDuration(ms: number): string {
     const s = Math.floor(ms / 1000);

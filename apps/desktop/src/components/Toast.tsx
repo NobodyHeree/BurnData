@@ -17,7 +17,7 @@ const styles: Record<string, { bg: string; text: string; shadow: string }> = {
     info: { bg: 'rgba(255,59,0,0.95)', text: 'text-white', shadow: '0 0 20px rgba(255,59,0,0.3)' },
 };
 
-function ToastItem({ toast }: { toast: ToastType }) {
+const ToastItem = ({ toast }: { toast: ToastType }) => {
     const removeToast = useAppStore(state => state.removeToast);
     const Icon = icons[toast.type];
     const style = styles[toast.type];

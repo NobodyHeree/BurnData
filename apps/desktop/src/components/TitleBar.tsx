@@ -1,7 +1,7 @@
 import { Minus, Square, X } from 'lucide-react';
 import '../types/electron.d.ts';
 
-export function TitleBar() {
+export const TitleBar = () => {
     const handleMinimize = () => window.electronAPI?.window.minimize();
     const handleMaximize = () => window.electronAPI?.window.maximize();
     const handleClose = () => window.electronAPI?.window.close();

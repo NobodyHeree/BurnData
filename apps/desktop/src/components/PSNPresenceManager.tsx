@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAppStore } from '../store/appStore';
 
-export function PSNPresenceManager() {
+export const PSNPresenceManager = () => {
     const presenceUnsubscribeRef = useRef<(() => void) | null>(null);
 
     // Expose loadPresence globally

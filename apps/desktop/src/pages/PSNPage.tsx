@@ -25,7 +25,6 @@ import { PlayStationLogo } from '../components/logos';
 type SortOrder = 'a-z' | 'z-a' | 'last-online-recent' | 'last-online-old' | 'none';
 type FilterType = 'all' | 'plus' | 'no-plus' | 'online' | 'offline' | 'ps5' | 'ps4';
 
-// Format relative time
 function formatLastOnline(dateStr?: string): string {
     if (!dateStr) return 'Unknown';
     const date = new Date(dateStr);

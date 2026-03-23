@@ -173,27 +173,22 @@ export function PlatformPage() {
     const [selectedDMs, setSelectedDMs] = useState<Set<string>>(new Set());
 
     const toggleGuildSelection = (guildId: string) => {
-        const newSelected = new Set(selectedGuilds);
-        if (newSelected.has(guildId)) {
-            newSelected.delete(guildId);
-        } else {
-            newSelected.add(guildId);
-        }
-        setSelectedGuilds(newSelected);
+        setSelectedGuilds(prev => {
+            const next = new Set(prev);
+            next.has(guildId) ? next.delete(guildId) : next.add(guildId);
+            return next;
+        });
     };
 
     const toggleDMSelection = (channelId: string) => {
-        const newSelected = new Set(selectedDMs);
-        if (newSelected.has(channelId)) {
-            newSelected.delete(channelId);
-        } else {
-            newSelected.add(channelId);
-        }
-        setSelectedDMs(newSelected);
+        setSelectedDMs(prev => {
+            const next = new Set(prev);
+            next.has(channelId) ? next.delete(channelId) : next.add(channelId);
+            return next;
+        });
     };
 
     const selectAllGuilds = () => {
-        // Filter based on search if active, otherwise all
         const targets = serverSearch ? guilds.filter(g => g.name.toLowerCase().includes(serverSearch.toLowerCase())) : guilds;
         const newSelected = new Set(selectedGuilds);
         targets.forEach(g => newSelected.add(g.id));
@@ -214,8 +209,6 @@ export function PlatformPage() {
         setSelectedGuilds(new Set());
         setSelectedDMs(new Set());
     };
-
-
 
     const config = platformConfig[platformId || 'discord'];
     const isElectron = !!window.electronAPI?.discord;
@@ -273,7 +266,6 @@ export function PlatformPage() {
         initService();
         return () => { cancelled = true; };
     }, [platformId, platform?.connected]); // eslint-disable-line react-hooks/exhaustive-deps
-
 
     if (!config || !platform) {
         return (
@@ -959,8 +951,6 @@ export function PlatformPage() {
         }
     };
 
-
-
     type TimePreset = 'all_time' | 'year' | 'month' | 'week' | 'yesterday' | 'now' | 'custom';
 
     interface DateFilterState {
@@ -1053,13 +1043,11 @@ export function PlatformPage() {
     };
 
     const toggleChannelSelection = (channelId: string) => {
-        const newSelected = new Set(selectedChannels);
-        if (newSelected.has(channelId)) {
-            newSelected.delete(channelId);
-        } else {
-            newSelected.add(channelId);
-        }
-        setSelectedChannels(newSelected);
+        setSelectedChannels(prev => {
+            const next = new Set(prev);
+            next.has(channelId) ? next.delete(channelId) : next.add(channelId);
+            return next;
+        });
     };
 
     const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1141,17 +1129,9 @@ export function PlatformPage() {
     };
 
     const totalSelected = selectedGuilds.size + selectedDMs.size;
-
-    const getTargetsCount = () => {
-        if (deletionMode === 'simple') {
-            return totalSelected;
-        } else {
-            // In advanced mode, channels are for servers; DMs always use simple deletion
-            return selectedChannels.size + selectedDMs.size;
-        }
-    };
-
-    const targetsCount = getTargetsCount();
+    const targetsCount = deletionMode === 'simple'
+        ? totalSelected
+        : selectedChannels.size + selectedDMs.size;
 
     return (
         <motion.div

@@ -12,7 +12,7 @@ import {
 import { useState } from 'react';
 import { useAppStore, DeletionSpeed } from '../store/appStore';
 
-export function Settings() {
+export const Settings = () => {
     const platforms = useAppStore((state) => state.platforms);
     const getTotalDeleted = useAppStore((state) => state.getTotalDeleted);
     const settings = useAppStore((state) => state.settings);
