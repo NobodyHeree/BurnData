@@ -3,9 +3,7 @@ import { useAppStore } from '../store/appStore';
 
 export const JobManager = () => {
     useEffect(() => {
-        const removeDiscordListener = window.electronAPI?.discord.onProgress((data: any) => {
-            // data matches the shape we send from main:
-            // { jobId, status, progress, stats: { deleted, checked }, details }
+        const removeDiscordListener = window.electronAPI?.discord.onProgress((data) => {
 
             if (data.jobId) {
                 // Determine job status based on event status string
@@ -37,15 +35,14 @@ export const JobManager = () => {
                     deletedItems: data.stats?.deleted || 0,
                     error: data.status === 'Error' ? data.details : undefined,
                     currentChannel: data.stats?.currentChannel,
-                    speed: data.stats?.eta, // Speed from backend
+                    speed: data.stats?.eta ?? undefined,
                     completedAt: jobStatus === 'completed' || jobStatus === 'failed' ? new Date().toISOString() : undefined
                 });
             }
         });
 
         // PSN unfriend progress listener
-        const removePSNListener = window.electronAPI?.psn.onUnfriendProgress((data: any) => {
-            // data: { jobId, current, total, removed, failed, progress, completed }
+        const removePSNListener = window.electronAPI?.psn.onUnfriendProgress((data) => {
             if (data.jobId) {
                 const jobStatus = data.completed ? 'completed' : 'running';
 

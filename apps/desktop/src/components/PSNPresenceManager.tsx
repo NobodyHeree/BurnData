@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useAppStore } from '../store/appStore';
 
+declare global {
+    interface Window {
+        psnLoadPresence?: () => Promise<void>;
+    }
+}
+
 export const PSNPresenceManager = () => {
     const presenceUnsubscribeRef = useRef<(() => void) | null>(null);
 
@@ -9,7 +15,7 @@ export const PSNPresenceManager = () => {
         if (!window.electronAPI) return;
 
         // Store reference to loadPresence function globally
-        (window as any).psnLoadPresence = async () => {
+        window.psnLoadPresence = async () => {
             const friends = useAppStore.getState().psnFriends;
 
             if (friends.length === 0) {
@@ -61,7 +67,7 @@ export const PSNPresenceManager = () => {
                 presenceUnsubscribeRef.current();
                 presenceUnsubscribeRef.current = null;
             }
-            delete (window as any).psnLoadPresence;
+            delete window.psnLoadPresence;
         };
     }, []); // No dependencies - only set up once
 

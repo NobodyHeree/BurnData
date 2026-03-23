@@ -518,9 +518,12 @@ export class JobQueueManager {
             sendProgress('Completed', 100, { deleted: totalDeleted, checked: 0 }, `Done! Deleted ${totalDeleted} messages across ${targets.length} channels.`);
             this.removePersistedJob(jobId);
 
-        } catch (err) {
-            console.error('Deletion Exception:', err);
-            sendProgress('Error', 0, { deleted: 0, checked: 0 }, `Failed: ${err}`);
+        } catch (err: any) {
+            if (err?.config?.headers?.['Authorization']) {
+                err.config.headers['Authorization'] = '[REDACTED]';
+            }
+            console.error('Deletion Exception:', err instanceof Error ? err.message : err);
+            sendProgress('Error', 0, { deleted: 0, checked: 0 }, `Failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
         } finally {
             this.deletionController.active = false;
             this.deletionController.currentJobId = undefined;

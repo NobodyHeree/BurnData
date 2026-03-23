@@ -275,7 +275,7 @@ describe('appStore', () => {
             };
             localStorage.setItem('deletedata-storage', JSON.stringify(oldData));
 
-            const useAppStore = await loadStore();
+            await loadStore();
             await new Promise(resolve => setTimeout(resolve, 50));
 
             // Old key should be removed

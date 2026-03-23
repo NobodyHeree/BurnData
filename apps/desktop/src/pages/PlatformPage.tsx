@@ -19,7 +19,7 @@ import {
     Package
 } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
-import { DiscordService, DiscordGuild, DiscordChannel } from '@services/index';
+import { DiscordService, DiscordGuild, DiscordChannel, DiscordUser } from '@services/index';
 import { DiscordLogo } from '../components/logos';
 import { registerJob, getSpeedDelay, hasActiveJob, removeJobControl } from '../store/browserJobController';
 import { markDeleted, flushDeleted, getDeletedCount } from '../store/deletedTracker';
@@ -749,9 +749,18 @@ export function PlatformPage() {
                 const token = platform.token || sessionStorage.getItem(`burndata-token-${platformId}`) || '';
                 if (!token) throw new Error('No token available');
 
-                const svc = new DiscordService(token);
-                const user = await svc.validateToken();
                 const jobId = crypto.randomUUID();
+                const control = registerJob(jobId);
+
+                let svc: DiscordService;
+                let user: DiscordUser;
+                try {
+                    svc = new DiscordService(token);
+                    user = await svc.validateToken();
+                } catch (err) {
+                    removeJobControl(jobId);
+                    throw err;
+                }
 
                 // Collect all channel IDs to process
                 const channelIds = Array.from(selectedDMs);
@@ -772,9 +781,6 @@ export function PlatformPage() {
                 setShowDeletionModal(false);
                 setIsDeleting(false);
                 navigate('/jobs');
-
-                // Run deletion in background: scan first, then delete
-                const control = registerJob(jobId);
 
                 (async () => {
                     const updateJob = useAppStore.getState().updateJob;

@@ -36,7 +36,13 @@ export interface ElectronAPI {
         getPersistedJobs: () => Promise<{ jobs: any[]; queue: any[] }>;
         resumeJob: (jobId: string) => Promise<{ success: boolean; queued?: boolean; queuePosition?: number; error?: string }>;
         cancelPersistedJob: (jobId: string) => Promise<{ success: boolean }>;
-        onProgress: (callback: (data: { status: string; progress: number; details: string }) => void) => () => void;
+        onProgress: (callback: (data: {
+            jobId: string;
+            status: string;
+            progress: number;
+            stats: { deleted: number; checked: number; currentChannel?: string; eta?: string | null };
+            details: string;
+        }) => void) => () => void;
     };
     psn: {
         login: (npssoToken: string) => Promise<{ success: boolean; friendCount?: number; username?: string; error?: string }>;

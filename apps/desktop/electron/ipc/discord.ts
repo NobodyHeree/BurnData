@@ -1,7 +1,5 @@
 import { BrowserWindow, ipcMain, session, dialog } from 'electron';
 import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
 import Store from 'electron-store';
 import { DiscordService } from '@services/discord';
 import { encryptString, decryptString } from '../services/encryption';
@@ -376,7 +374,9 @@ export function registerDiscordHandlers(
                                 }
                             }
                         }
-                    } catch { /* skip */ }
+                    } catch (err) {
+                        console.warn(`[DataPackage] Failed to parse JSON for channel ${channelId}:`, err instanceof Error ? err.message : err);
+                    }
                 } else {
                     const lines = content.split('\n');
                     for (let i = 1; i < lines.length; i++) {

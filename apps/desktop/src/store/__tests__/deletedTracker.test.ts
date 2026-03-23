@@ -116,16 +116,7 @@ describe('deletedTracker', () => {
 
         it('global cap evicts smallest channels first', async () => {
             const tracker = await loadTracker();
-            // Create a scenario exceeding 200k total
-            // 3 channels: small (100), medium (1000), large (199901)
-            const store: Record<string, string[]> = {
-                small: Array.from({ length: 100 }, (_, i) => `s-${i}`),
-                medium: Array.from({ length: 1000 }, (_, i) => `m-${i}`),
-                large: Array.from({ length: 49900 }, (_, i) => `l-${i}`),
-            };
-            // Total = 51000, under 200k — but let's push it over with more
-            // Actually, 200k is a lot. Let's just test the logic with a smaller scenario
-            // by writing 200001 IDs across channels
+            // 5 channels with 41000 each = 205000 > 200k global cap
             const bigStore: Record<string, string[]> = {};
             // 5 channels with 41000 each = 205000 > 200k
             for (let c = 0; c < 5; c++) {

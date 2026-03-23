@@ -258,8 +258,8 @@ export function PSNPage() {
 
         console.log('[PSNPage] Triggering presence load');
         // Call the global presence loader (runs in background via PSNPresenceManager)
-        if ((window as any).psnLoadPresence) {
-            (window as any).psnLoadPresence();
+        if (window.psnLoadPresence) {
+            window.psnLoadPresence();
         }
     };
 
@@ -342,8 +342,11 @@ export function PSNPage() {
     }, [showPreviewModal, confirmCountdown]);
 
     // Actually perform the unfriend operation
+    const [isUnfriending, setIsUnfriending] = useState(false);
+
     const confirmUnfriend = async () => {
-        if (!window.electronAPI || selectedFriends.size === 0) return;
+        if (!window.electronAPI || selectedFriends.size === 0 || isUnfriending) return;
+        setIsUnfriending(true);
 
         const accountIds = Array.from(selectedFriends);
         console.log('[PSNPage] Starting unfriend for', accountIds.length, 'friends');
@@ -376,6 +379,8 @@ export function PSNPage() {
             }
         } catch (error) {
             console.error('Unfriend failed:', error);
+        } finally {
+            setIsUnfriending(false);
         }
     };
 
