@@ -15,25 +15,15 @@ export const schemas = {
     discordUserId: z.string().regex(/^\d+$/),
 
     discordDeletionConfig: z.object({
-        token: z.string().min(1),
-        userId: z.string().regex(/^\d+$/),
         mode: z.enum(['simple', 'advanced']),
         dms: z.array(z.string()).optional(),
         guilds: z.array(z.string()).optional(),
-        channels: z.array(z.object({
-            guildId: z.string(),
-            channelId: z.string(),
-            channelName: z.string().optional(),
-        })).optional(),
-        filters: z.object({
-            startDate: z.string().optional(),
-            endDate: z.string().optional(),
-            includeKeywords: z.array(z.string()).optional(),
-            excludeKeywords: z.array(z.string()).optional(),
-            hasAttachments: z.boolean().optional(),
-            minLength: z.number().optional(),
-            maxLength: z.number().optional(),
+        selectedChannels: z.array(z.string()).optional(),
+        dateFilter: z.object({
+            startDate: z.string().nullable().optional(),
+            endDate: z.string().nullable().optional(),
         }).optional(),
+        dataPackageMessages: z.record(z.string(), z.array(z.string())).optional(),
     }),
 
     // PSN
