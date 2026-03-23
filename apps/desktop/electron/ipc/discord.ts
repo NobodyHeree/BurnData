@@ -308,6 +308,7 @@ export function registerDiscordHandlers(
 
         try {
             // Use yauzl (already a dependency via electron-builder) to read the zip
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const yauzl = require('yauzl');
 
             const entries = await new Promise<Map<string, string>>((resolve, reject) => {

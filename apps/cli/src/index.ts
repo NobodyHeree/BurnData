@@ -44,7 +44,7 @@ function log(level: 'INFO' | 'WARN' | 'ERROR', message: string) {
     const line = `[${ts}] [${level}] ${message}`;
     console.log(line);
     if (logFile) {
-        try { appendFileSync(logFile, line + '\n'); } catch {}
+        try { appendFileSync(logFile, line + '\n'); } catch { /* ignore */ }
     }
 }
 
@@ -163,7 +163,7 @@ async function loadDataPackage(zipPath: string): Promise<Record<string, string[]
                         if (id && /^\d+$/.test(String(id))) messageIds.push(String(id));
                     }
                 }
-            } catch {}
+            } catch { /* malformed json, skip */ }
         } else {
             const lines = content.split('\n');
             for (let i = 1; i < lines.length; i++) {
@@ -524,7 +524,7 @@ process.on('uncaughtException', async (err) => {
     try {
         await webhook.error('CLI crashed (uncaughtException)', err.stack || err.message);
         state?.destroy();
-    } catch {}
+    } catch { /* last resort, nothing to do */ }
     process.exit(1);
 });
 
@@ -533,7 +533,7 @@ process.on('unhandledRejection', async (reason: any) => {
     try {
         await webhook.error('CLI crashed (unhandledRejection)', String(reason?.stack || reason));
         state?.destroy();
-    } catch {}
+    } catch { /* last resort, nothing to do */ }
     process.exit(1);
 });
 
@@ -542,6 +542,6 @@ main().catch(async err => {
     try {
         await webhook.error('CLI fatal error', err.stack || err.message);
         state?.destroy();
-    } catch {}
+    } catch { /* last resort, nothing to do */ }
     process.exit(1);
 });
