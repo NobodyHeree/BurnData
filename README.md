@@ -5,8 +5,7 @@
 <h1 align="center">BurnData</h1>
 
 <p align="center">
-  <b>Erase your digital footprint.</b><br>
-  Free, open-source alternative to <a href="https://redact.dev">Redact.dev</a>
+  <b>Erase your digital footprint.</b>
 </p>
 
 <p align="center">
