@@ -42,15 +42,16 @@ function saveStore(store: Record<string, string[]>) {
         }
     }
 
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-    } catch {
-        // localStorage full — drop smallest channels until it fits
-        console.warn('[DeletedTracker] localStorage full, evicting channels');
-        const sorted = Object.keys(store).sort((a, b) => store[a].length - store[b].length);
-        if (sorted.length > 1) {
+    // Retry with eviction if localStorage is full (iterative, not recursive)
+    while (true) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+            return;
+        } catch {
+            const sorted = Object.keys(store).sort((a, b) => store[a].length - store[b].length);
+            if (sorted.length <= 1) return; // nothing left to evict
+            console.warn('[DeletedTracker] localStorage full, evicting channel:', sorted[0]);
             delete store[sorted[0]];
-            saveStore(store);
         }
     }
 }
@@ -103,3 +104,10 @@ export function clearDeletedForChannel(channelId: string) {
 export function clearAllDeleted() {
     localStorage.removeItem(STORAGE_KEY);
 }
+
+// Flush pending writes before the page unloads
+window.addEventListener('beforeunload', () => {
+    if (Object.keys(pendingWrites).length > 0) {
+        flushDeleted();
+    }
+});

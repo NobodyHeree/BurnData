@@ -197,18 +197,20 @@ export class SmartRateLimiter {
     /** Sleep with cancellation support */
     private sleep(ms: number): Promise<void> {
         return new Promise(resolve => {
-            const timer = setTimeout(resolve, ms);
+            let checkInterval: ReturnType<typeof setInterval> | null = null;
+            const timer = setTimeout(() => {
+                if (checkInterval) clearInterval(checkInterval);
+                resolve();
+            }, ms);
             // Check cancellation every 100ms for long sleeps
             if (ms > 500) {
-                const check = setInterval(() => {
+                checkInterval = setInterval(() => {
                     if (this._isCancelled) {
                         clearTimeout(timer);
-                        clearInterval(check);
+                        clearInterval(checkInterval!);
                         resolve();
                     }
                 }, 100);
-                // Clear interval when timer fires normally
-                setTimeout(() => clearInterval(check), ms + 10);
             }
         });
     }

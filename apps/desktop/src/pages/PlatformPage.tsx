@@ -231,7 +231,8 @@ export function PlatformPage() {
 
     // Initialize DiscordService on mount if connected
     useEffect(() => {
-        const electronMode = !!window.electronAPI?.discord; // compute inside effect to avoid stale closure
+        let cancelled = false;
+        const electronMode = !!window.electronAPI?.discord;
         const initService = async () => {
             if (platformId === 'discord' && platform?.connected) {
                 setIsLoadingData(true);
@@ -241,27 +242,30 @@ export function PlatformPage() {
                             window.electronAPI!.discord.getGuilds(),
                             window.electronAPI!.discord.getDMs()
                         ]);
+                        if (cancelled) return;
                         setGuilds(fetchedGuilds);
                         setDms(fetchedDMs);
                     } else {
-                        // Browser mode: use DiscordService directly via Vite proxy
                         const token = platform.token || sessionStorage.getItem(`burndata-token-${platformId}`) || '';
                         if (!token) {
-                            setError('No token found. Please reconnect.');
-                            setIsLoadingData(false);
+                            if (!cancelled) setError('No token found. Please reconnect.');
+                            if (!cancelled) setIsLoadingData(false);
                             return;
                         }
                         const svc = new DiscordService(token);
                         await svc.validateToken();
+                        if (cancelled) return;
                         setDiscordService(svc);
                         const [fetchedGuilds, fetchedDMs] = await Promise.all([
                             svc.getGuilds(),
                             svc.getDMChannels()
                         ]);
+                        if (cancelled) return;
                         setGuilds(fetchedGuilds);
                         setDms(fetchedDMs);
                     }
                 } catch (err) {
+                    if (cancelled) return;
                     console.error('Failed to fetch Discord data', err);
                     const errMsg = err instanceof Error ? err.message : 'Failed to fetch Discord data';
                     if (errMsg.includes('No Discord token')) {
@@ -271,11 +275,12 @@ export function PlatformPage() {
                         setError(errMsg);
                     }
                 } finally {
-                    setIsLoadingData(false);
+                    if (!cancelled) setIsLoadingData(false);
                 }
             }
         };
         initService();
+        return () => { cancelled = true; };
     }, [platformId, platform?.connected]); // eslint-disable-line react-hooks/exhaustive-deps
 
 

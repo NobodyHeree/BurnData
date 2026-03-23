@@ -297,6 +297,8 @@ export const useAppStore = create<AppState>()(
                             : j
                     );
                 }
+                // Reset transient loading flags that can't survive a reload
+                state.psnPresenceLoading = false;
             },
         }
     )
