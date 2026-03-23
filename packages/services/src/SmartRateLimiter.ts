@@ -89,7 +89,7 @@ export class SmartRateLimiter {
     cancel() { this._isCancelled = true; this._isPaused = false; }
 
     /** Reset cancel state for reuse */
-    reset() { this._isCancelled = false; this._isPaused = false; this.burstCount = 0; this.consecutive429s = 0; }
+    reset() { this._isCancelled = false; this._isPaused = false; this.burstCount = 0; this.consecutive429s = 0; this.lastRequestTime = 0; this.stats.totalRequests = 0; }
 
     get isPaused() { return this._isPaused; }
     get isCancelled() { return this._isCancelled; }
@@ -112,6 +112,7 @@ export class SmartRateLimiter {
         const { wasAlreadyDeleted, rateLimitRemaining, rateLimitResetMs } = options;
 
         this.stats.totalRequests++;
+        if (this.lastRequestTime === 0) this.lastRequestTime = Date.now();
 
         // Already deleted = no rate limit consumed, minimal wait
         if (wasAlreadyDeleted) {
@@ -212,15 +213,18 @@ export class SmartRateLimiter {
         });
     }
 
-    /** Get estimated time remaining */
+    /** Get estimated time remaining based on observed throughput */
     getETR(remainingMessages: number): number {
-        const avgDelay = this.stats.totalRequests > 0
-            ? (Date.now() - this.lastRequestTime) / this.stats.totalRequests
-            : this.config.baseDelayMs;
+        if (this.stats.totalRequests < 2 || this.lastRequestTime === 0) {
+            // Not enough data — estimate from config
+            const perMsg = this.config.baseDelayMs;
+            const burstsRemaining = Math.ceil(remainingMessages / this.config.burstSize);
+            return (remainingMessages * perMsg) + (burstsRemaining * this.config.burstPauseMs);
+        }
 
-        // Account for burst pauses
-        const burstsRemaining = Math.ceil(remainingMessages / this.config.burstSize);
-        return (remainingMessages * avgDelay) + (burstsRemaining * this.config.burstPauseMs);
+        const elapsed = Date.now() - this.lastRequestTime;
+        const msPerMessage = elapsed / this.stats.totalRequests;
+        return Math.round(remainingMessages * msPerMessage);
     }
 }
 

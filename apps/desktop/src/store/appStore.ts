@@ -286,6 +286,18 @@ export const useAppStore = create<AppState>()(
                 psnFriends: state.psnFriends,
                 psnHasPresenceData: state.psnHasPresenceData,
             }),
+            onRehydrateStorage: () => (state) => {
+                if (!state) return;
+                // Jobs that were running/pending when the page closed can't resume — mark them paused
+                const orphaned = state.jobs.some(j => j.status === 'running' || j.status === 'pending');
+                if (orphaned) {
+                    state.jobs = state.jobs.map(j =>
+                        j.status === 'running' || j.status === 'pending'
+                            ? { ...j, status: 'paused' as const }
+                            : j
+                    );
+                }
+            },
         }
     )
 );

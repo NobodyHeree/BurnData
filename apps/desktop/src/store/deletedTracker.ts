@@ -3,7 +3,8 @@
 
 const STORAGE_KEY = 'burndata-deleted-ids';
 const OLD_STORAGE_KEY = 'deletedata-deleted-ids';
-const MAX_IDS_PER_CHANNEL = 50000; // Cap to prevent localStorage bloat
+const MAX_IDS_PER_CHANNEL = 50000;
+const MAX_IDS_GLOBAL = 200000; // Hard cap across all channels
 
 // Migrate from old branding
 if (!localStorage.getItem(STORAGE_KEY) && localStorage.getItem(OLD_STORAGE_KEY)) {
@@ -23,20 +24,32 @@ function getStore(): Record<string, string[]> {
 }
 
 function saveStore(store: Record<string, string[]>) {
-    // Enforce cap per channel
+    // Enforce per-channel cap
     for (const channelId of Object.keys(store)) {
         if (store[channelId].length > MAX_IDS_PER_CHANNEL) {
             store[channelId] = store[channelId].slice(-MAX_IDS_PER_CHANNEL);
         }
     }
+
+    // Enforce global cap — evict smallest channels first (LRU-ish)
+    let total = Object.values(store).reduce((sum, ids) => sum + ids.length, 0);
+    if (total > MAX_IDS_GLOBAL) {
+        const sorted = Object.entries(store).sort((a, b) => a[1].length - b[1].length);
+        for (const [channelId] of sorted) {
+            if (total <= MAX_IDS_GLOBAL) break;
+            total -= store[channelId].length;
+            delete store[channelId];
+        }
+    }
+
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-    } catch (e) {
-        // localStorage full — clear oldest channels
-        console.warn('[DeletedTracker] localStorage full, clearing oldest data');
-        const channels = Object.keys(store);
-        if (channels.length > 1) {
-            delete store[channels[0]];
+    } catch {
+        // localStorage full — drop smallest channels until it fits
+        console.warn('[DeletedTracker] localStorage full, evicting channels');
+        const sorted = Object.keys(store).sort((a, b) => store[a].length - store[b].length);
+        if (sorted.length > 1) {
+            delete store[sorted[0]];
             saveStore(store);
         }
     }

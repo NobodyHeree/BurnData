@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Clock, CheckCircle, XCircle, Loader2, Flame, AlertCircle, Pause, Play, Square } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
-import { pauseJob, resumeJob as resumeBrowserJob, stopJob } from '../store/browserJobController';
+import { pauseJob, resumeJob as resumeBrowserJob, stopJob, removeJobControl, cleanupOrphanedControls } from '../store/browserJobController';
 
 const isElectron = typeof window !== 'undefined' && !!(window as any).electronAPI?.discord;
 
@@ -86,6 +86,7 @@ export function Jobs() {
             await window.electronAPI!.discord.stopDeletion();
         } else {
             stopJob(jobId);
+            removeJobControl(jobId);
         }
         updateJob(jobId, { status: 'failed', error: 'Stopped by user' });
     };
@@ -103,6 +104,7 @@ export function Jobs() {
             await window.electronAPI!.discord.cancelPersistedJob(jobId);
         } else {
             stopJob(jobId);
+            removeJobControl(jobId);
         }
         removeJob(jobId);
     };
@@ -121,6 +123,12 @@ export function Jobs() {
             return () => clearTimeout(timer);
         }
     }, [location.state]);
+
+    // Sweep orphaned browser job controls on mount
+    useEffect(() => {
+        const activeIds = new Set(jobs.map(j => j.id));
+        cleanupOrphanedControls(activeIds);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const completedCount = jobs.filter(j => j.status === 'completed').length;
 

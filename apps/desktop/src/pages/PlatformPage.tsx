@@ -23,7 +23,7 @@ import {
 import { useAppStore } from '../store/appStore';
 import { DiscordService, DiscordGuild, DiscordChannel } from '@services/index';
 import { DiscordLogo } from '../components/logos';
-import { registerJob, getSpeedDelay } from '../store/browserJobController';
+import { registerJob, getSpeedDelay, hasActiveJob, removeJobControl } from '../store/browserJobController';
 import { markDeleted, flushDeleted, getDeletedCount } from '../store/deletedTracker';
 
 const platformConfig: Record<string, {
@@ -805,6 +805,11 @@ export function PlatformPage() {
                 }
             } else {
                 // Browser mode: use DiscordService directly
+                if (hasActiveJob()) {
+                    useAppStore.getState().addToast({ type: 'warning', message: 'A job is already running. Stop it first.' });
+                    setIsDeleting(false);
+                    return;
+                }
                 const token = platform.token || sessionStorage.getItem(`burndata-token-${platformId}`) || '';
                 if (!token) throw new Error('No token available');
 
@@ -896,6 +901,7 @@ export function PlatformPage() {
 
                     if (control.isCancelled) {
                         updateJob(jobId, { status: 'failed', error: 'Stopped by user' });
+                        removeJobControl(jobId);
                         return;
                     }
 
@@ -912,6 +918,7 @@ export function PlatformPage() {
                         // Stop check
                         if (control.isCancelled) {
                             updateJob(jobId, { status: 'failed', error: 'Stopped by user' });
+                            removeJobControl(jobId);
                             return;
                         }
 
@@ -922,6 +929,7 @@ export function PlatformPage() {
                         }
                         if (control.isCancelled) {
                             updateJob(jobId, { status: 'failed', error: 'Stopped by user' });
+                            removeJobControl(jobId);
                             return;
                         }
                         // Restore running status after unpause
@@ -987,6 +995,7 @@ export function PlatformPage() {
                         type: 'success',
                         message: `Deleted ${totalDeleted} messages from ${channelIds.length} channel(s)`,
                     });
+                    removeJobControl(jobId);
                 })().catch((err) => {
                     console.error('[Deletion] Unhandled error:', err);
                     useAppStore.getState().updateJob(jobId, {
@@ -997,6 +1006,7 @@ export function PlatformPage() {
                         type: 'error',
                         message: `Deletion failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
                     });
+                    removeJobControl(jobId);
                 });
             }
         } catch (err) {
@@ -1772,13 +1782,13 @@ export function PlatformPage() {
                                         </button>
                                         <button
                                             onClick={handleStartDeletion}
-                                            disabled={targetsCount === 0}
-                                            className={`px-6 py-2 font-bold rounded-lg transition-all ${targetsCount === 0
+                                            disabled={targetsCount === 0 || isDeleting}
+                                            className={`px-6 py-2 font-bold rounded-lg transition-all ${targetsCount === 0 || isDeleting
                                                 ? 'bg-dark-600 text-dark-400 cursor-not-allowed'
                                                 : 'bg-discord-red hover:bg-discord-red/90 text-white shadow-lg shadow-discord-red/20 active:scale-95'
                                                 }`}
                                         >
-                                            Start Deletion ({targetsCount} target{targetsCount !== 1 ? 's' : ''})
+                                            {isDeleting ? 'Starting...' : `Start Deletion (${targetsCount} target${targetsCount !== 1 ? 's' : ''})`}
                                         </button>
                                     </div>
                                 )}
