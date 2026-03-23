@@ -1,88 +1,95 @@
-# BurnData - Redact.dev Alternative
+<p align="center">
+  <img src="apps/desktop/build/icon.png" width="80" />
+</p>
 
-Mass delete your social media data from Discord, Twitter, Reddit and more.
+<h1 align="center">BurnData</h1>
+
+<p align="center">
+  <b>Erase your digital footprint.</b><br>
+  Free, open-source alternative to <a href="https://redact.dev">Redact.dev</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-Windows-blue?logo=windows&logoColor=white" />
+  <img src="https://img.shields.io/badge/version-1.0.0-orange" />
+  <img src="https://img.shields.io/github/license/NobodyHeree/DeleteData?color=green" />
+  <img src="https://img.shields.io/badge/electron-28-blueviolet?logo=electron&logoColor=white" />
+</p>
+
+<br>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" width="700" alt="BurnData Dashboard" />
+</p>
+
+---
+
+## What is BurnData?
+
+BurnData lets you mass-delete your data from platforms like Discord and PlayStation Network. No cloud, no subscriptions — everything runs locally on your machine.
+
+- **Discord** — delete messages across DMs and servers, with date filters and data package import
+- **PlayStation** — mass unfriend your PSN friends list
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/discord.png" width="420" alt="Discord connection" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/settings.png" width="420" alt="Settings" />
+</p>
 
 ## Features
 
-- **Discord** - Delete messages, DMs, and server content
-- **Twitter/X** - Delete tweets, likes, and retweets (coming soon)
-- **Reddit** - Delete posts and comments (coming soon)
-- **More platforms** - Telegram, Facebook, Instagram...
+- **100% local** — your tokens are encrypted and never leave your device
+- **Smart rate limiting** — adaptive delays, burst+pause strategy, handles 429s automatically
+- **Data package import** — load your Discord data export (ZIP) for faster targeted deletion
+- **Export before delete** — backup everything before burning
+- **Job queue** — queue multiple deletions, pause/resume anytime
+- **Real-time progress** — live stats, ETA, per-channel tracking
+- **Headless CLI** — run on a server (Debian/Ubuntu) with Discord webhook notifications
 
-## Why BurnData?
+## Download
 
-- **Free & Open Source** - No subscription fees
-- **Privacy First** - Your tokens never leave your device
-- **Desktop + Web** - Use the app or the web version
-- **Export Before Delete** - Backup your data before removal
+Grab the latest installer from [**Releases**](https://github.com/NobodyHeree/DeleteData/releases).
 
-## Quick Start
+> Windows only for now. macOS/Linux coming later.
 
-### Prerequisites
-- Node.js 18+
-- pnpm 8+
-
-### Installation
+## Build from source
 
 ```bash
-# Clone the repo
-git clone https://github.com/NobodyHeree/BurnData.git
-cd BurnData
-
-# Install dependencies
+git clone https://github.com/NobodyHeree/DeleteData.git
+cd DeleteData
 pnpm install
-
-# Run desktop app
 pnpm dev
-
-# Or run web version
-pnpm dev:web
 ```
 
-## Project Structure
+Requires Node.js 20+ and pnpm 10+.
+
+## How it works
+
+1. Connect your account (auto-login or manual token)
+2. Select what to delete — servers, DMs, date range
+3. Optionally import your Discord data package for faster scanning
+4. Hit delete and watch it burn
+
+> **Heads up:** Using a user token is against Discord's ToS. This can get your account banned. Your call.
+
+## Tech stack
+
+Electron + React + Vite + TypeScript + Tailwind + Zustand. Monorepo with pnpm workspaces.
 
 ```
-burndata/
-├── apps/
-│   ├── desktop/      # Electron + React app
-│   ├── cli/          # Headless CLI for servers
-│   └── web/          # Web version
-├── packages/
-│   ├── ui/           # Shared React components
-│   ├── core/         # Business logic
-│   └── services/     # Platform APIs (Discord, Twitter, etc.)
-└── package.json
+apps/desktop    Electron app
+apps/cli        Headless CLI for servers
+packages/core   Types, engine interfaces
+packages/services   Discord & PSN API clients
+packages/ui     Shared components
 ```
-
-## How It Works
-
-### Discord
-1. Enter your Discord user token (tutorial included)
-2. Select servers/DMs to clean
-3. Apply filters (date, keywords, etc.)
-4. Preview & confirm deletion
-5. Watch real-time progress
-
-### Getting Your Discord Token
-> **Warning**: Using a user token is against Discord's Terms of Service. Use at your own risk.
-
-1. Open Discord in your browser
-2. Press F12 → Network tab
-3. Send a message and look for the request
-4. Copy the `Authorization` header value
-
-## Tech Stack
-
-- **Desktop**: Electron + React + Vite
-- **Web**: React + Vite
-- **CLI**: Node.js + TypeScript (headless, for servers)
-- **Shared**: TypeScript, Tailwind CSS
-- **State**: Zustand
-- **API**: REST + WebSocket for real-time updates
 
 ## Disclaimer
 
-This tool is for educational purposes. Using user tokens may violate platform Terms of Service. The authors are not responsible for any account bans or data loss.
+This tool is provided as-is for educational and personal use. Using automated tools or user tokens may violate platform Terms of Service. The authors are not responsible for account suspensions, bans, or data loss. **Use at your own risk.**
 
 ## License
 
