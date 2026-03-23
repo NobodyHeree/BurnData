@@ -9,8 +9,6 @@ const isElectron = typeof window !== 'undefined' && !!(window as any).electronAP
 
 const platformMeta: Record<string, { color: string; name: string }> = {
     discord: { color: '#5865F2', name: 'Discord' },
-    twitter: { color: '#1DA1F2', name: 'Twitter' },
-    reddit: { color: '#FF4500', name: 'Reddit' },
     psn: { color: '#003791', name: 'PlayStation Network' },
 };
 

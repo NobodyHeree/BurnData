@@ -7,8 +7,6 @@ import {
     AlertTriangle,
     CheckCircle,
     MessageSquare,
-    Twitter,
-    Cat,
     Loader2,
     LogOut,
     User,
@@ -47,32 +45,6 @@ const platformConfig: Record<string, {
             'Paste this code and press Enter:',
             '(webpackChunkdiscord_app.push([[\'\'...getToken()',
             'Copy the token that appears',
-        ]
-    },
-    twitter: {
-        name: 'Twitter',
-        icon: Twitter,
-        color: '#1DA1F2',
-        gradient: 'from-[#1DA1F2] to-[#0D8BD9]',
-        supportsAutoLogin: false,
-        tokenGuide: [
-            'Go to Twitter Settings → Your Account',
-            'Click on "Download an archive of your data"',
-            'Wait for Twitter to prepare your archive',
-            'Download and extract the ZIP file',
-            'Upload the tweets.js file here'
-        ]
-    },
-    reddit: {
-        name: 'Reddit',
-        icon: Cat,
-        color: '#FF4500',
-        gradient: 'from-[#FF4500] to-[#FF6B3D]',
-        supportsAutoLogin: false,
-        tokenGuide: [
-            'Reddit uses OAuth2 (coming soon)',
-            'Click "Connect with Reddit"',
-            'Authorize the application',
         ]
     }
 };
@@ -310,7 +282,7 @@ export function PlatformPage() {
     if (!config || !platform) {
         return (
             <div className="flex items-center justify-center h-full">
-                <p className="text-dark-400">Platform not found</p>
+                <p className="text-burn-muted">Platform not found</p>
             </div>
         );
     }
@@ -415,7 +387,7 @@ export function PlatformPage() {
     const renderTabContent = () => {
         if (isLoadingData) {
             return (
-                <div className="flex flex-col items-center justify-center py-20 text-dark-400">
+                <div className="flex flex-col items-center justify-center py-20 text-burn-muted">
                     <Loader2 className="w-8 h-8 animate-spin mb-4 text-discord-blurple" />
                     <p>Fetching your servers and messages...</p>
                 </div>
@@ -430,11 +402,11 @@ export function PlatformPage() {
                 return (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-xl font-bold text-white">Your Servers</h3>
+                            <h3 className="text-xl font-bold text-burn-cream">Your Servers</h3>
                             <div className="flex items-center gap-4">
                                 <button
                                     onClick={selectAllGuilds}
-                                    className="text-xs text-discord-blurple hover:text-white font-medium transition-colors"
+                                    className="text-xs text-discord-blurple hover:text-burn-cream font-medium transition-colors"
                                 >
                                     Select All
                                 </button>
@@ -445,14 +417,14 @@ export function PlatformPage() {
                                         </span>
                                         <button
                                             onClick={clearSelection}
-                                            className="text-xs text-dark-400 hover:text-white underline"
+                                            className="text-xs text-burn-muted hover:text-burn-cream underline"
                                         >
                                             Clear
                                         </button>
                                     </div>
                                 )}
                                 <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-burn-muted" />
                                     <input
                                         type="text"
                                         placeholder="Search servers..."
@@ -498,7 +470,7 @@ export function PlatformPage() {
                                                 </div>
                                             )}
                                             <div className="flex-1 min-w-0 pr-6">
-                                                <h4 className="font-semibold text-white truncate">{guild.name}</h4>
+                                                <h4 className="font-semibold text-burn-cream truncate">{guild.name}</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -516,17 +488,17 @@ export function PlatformPage() {
                 return (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-xl font-bold text-white">Direct Messages</h3>
+                            <h3 className="text-xl font-bold text-burn-cream">Direct Messages</h3>
                             <div className="flex items-center gap-4">
                                 <button
                                     onClick={selectAllDMs}
-                                    className="text-xs text-discord-green hover:text-white font-medium transition-colors"
+                                    className="text-xs text-discord-green hover:text-burn-cream font-medium transition-colors"
                                 >
                                     Select All
                                 </button>
                                 <button
                                     onClick={() => setShowAddDMModal(true)}
-                                    className="flex items-center gap-1 text-xs text-discord-blurple hover:text-white font-medium transition-colors"
+                                    className="flex items-center gap-1 text-xs text-discord-blurple hover:text-burn-cream font-medium transition-colors"
                                 >
                                     <UserPlus className="w-3 h-3" />
                                     Add by ID
@@ -538,14 +510,14 @@ export function PlatformPage() {
                                         </span>
                                         <button
                                             onClick={clearSelection}
-                                            className="text-xs text-dark-400 hover:text-white underline"
+                                            className="text-xs text-burn-muted hover:text-burn-cream underline"
                                         >
                                             Clear
                                         </button>
                                     </div>
                                 )}
                                 <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-burn-muted" />
                                     <input
                                         type="text"
                                         placeholder="Search people..."
@@ -588,14 +560,14 @@ export function PlatformPage() {
                                                 </div>
                                             ) : (
                                                 <div className="w-12 h-12 rounded-full bg-dark-700 flex items-center justify-center">
-                                                    <Users className="w-6 h-6 text-dark-400" />
+                                                    <Users className="w-6 h-6 text-burn-muted" />
                                                 </div>
                                             )}
                                             <div className="flex-1 min-w-0 pr-6">
-                                                <h4 className="font-semibold text-white truncate">
+                                                <h4 className="font-semibold text-burn-cream truncate">
                                                     {recipient ? recipient.username : (dm.name || 'Group DM')}
                                                 </h4>
-                                                <p className="text-xs text-dark-400">
+                                                <p className="text-xs text-burn-muted">
                                                     {dm.type === 1 ? 'Direct Message' : 'Group Chat'}
                                                     {packageCount != null && packageCount > 0 && (() => {
                                                         const alreadyDone = getDeletedCount(dm.id);
@@ -622,22 +594,22 @@ export function PlatformPage() {
                     <div className="space-y-6">
                         {/* Stats */}
                         <div className="glass-card p-6">
-                            <h3 className="text-lg font-semibold text-white mb-4">Statistics</h3>
+                            <h3 className="text-lg font-semibold text-burn-cream mb-4">Statistics</h3>
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 rounded-lg bg-dark-800">
-                                    <p className="text-2xl font-bold text-white">
+                                <div className="p-4 bg-dark-800">
+                                    <p className="text-2xl font-bold text-burn-cream">
                                         {platform.stats.totalDeleted.toLocaleString()}
                                     </p>
-                                    <p className="text-sm text-dark-400">Items Deleted</p>
+                                    <p className="text-sm text-burn-muted">Items Deleted</p>
                                 </div>
-                                <div className="p-4 rounded-lg bg-dark-800">
-                                    <p className="text-2xl font-bold text-white">
+                                <div className="p-4 bg-dark-800">
+                                    <p className="text-2xl font-bold text-burn-cream">
                                         {platform.stats.lastDeletionAt
                                             ? new Date(platform.stats.lastDeletionAt).toLocaleDateString()
                                             : 'Never'
                                         }
                                     </p>
-                                    <p className="text-sm text-dark-400">Last Deletion</p>
+                                    <p className="text-sm text-burn-muted">Last Deletion</p>
                                 </div>
                             </div>
                         </div>
@@ -648,11 +620,11 @@ export function PlatformPage() {
                                 className="glass-card p-6 text-left hover:border-discord-blurple/50 transition-colors group"
                                 onClick={() => setActiveTab('servers')}
                             >
-                                <div className="w-12 h-12 rounded-xl bg-discord-blurple/20 flex items-center justify-center text-discord-blurple mb-4 group-hover:scale-110 transition-transform">
+                                <div className="w-12 h-12 bg-discord-blurple/20 flex items-center justify-center text-discord-blurple mb-4 group-hover:scale-110 transition-transform">
                                     <Users className="w-6 h-6" />
                                 </div>
-                                <h3 className="font-semibold text-white mb-2">Clean Servers</h3>
-                                <p className="text-sm text-dark-400 mb-4">Delete messages from servers you joined</p>
+                                <h3 className="font-semibold text-burn-cream mb-2">Clean Servers</h3>
+                                <p className="text-sm text-burn-muted mb-4">Delete messages from servers you joined</p>
                                 <span className="text-sm font-medium text-discord-blurple">
                                     Browse Servers →
                                 </span>
@@ -661,11 +633,11 @@ export function PlatformPage() {
                                 className="glass-card p-6 text-left hover:border-discord-green/50 transition-colors group"
                                 onClick={() => setActiveTab('dms')}
                             >
-                                <div className="w-12 h-12 rounded-xl bg-discord-green/20 flex items-center justify-center text-discord-green mb-4 group-hover:scale-110 transition-transform">
+                                <div className="w-12 h-12 bg-discord-green/20 flex items-center justify-center text-discord-green mb-4 group-hover:scale-110 transition-transform">
                                     <MessageSquare className="w-6 h-6" />
                                 </div>
-                                <h3 className="font-semibold text-white mb-2">Clean DMs</h3>
-                                <p className="text-sm text-dark-400 mb-4">Delete private messages and group chats</p>
+                                <h3 className="font-semibold text-burn-cream mb-2">Clean DMs</h3>
+                                <p className="text-sm text-burn-muted mb-4">Delete private messages and group chats</p>
                                 <span className="text-sm font-medium text-discord-green">
                                     Browse DMs →
                                 </span>
@@ -676,12 +648,12 @@ export function PlatformPage() {
                         <div className="glass-card p-6">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-discord-fuchsia/20 flex items-center justify-center text-discord-fuchsia">
+                                    <div className="w-12 h-12 bg-discord-fuchsia/20 flex items-center justify-center text-discord-fuchsia">
                                         <Package className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-white">Import Data Package</h3>
-                                        <p className="text-sm text-dark-400">
+                                        <h3 className="font-semibold text-burn-cream">Import Data Package</h3>
+                                        <p className="text-sm text-burn-muted">
                                             Import your Discord data export (ZIP) for faster deletion — skips the search phase entirely.
                                         </p>
                                     </div>
@@ -689,7 +661,7 @@ export function PlatformPage() {
                                 <button
                                     onClick={handleImportDataPackage}
                                     disabled={isImportingPackage}
-                                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-discord-fuchsia/10 text-discord-fuchsia hover:bg-discord-fuchsia/20 transition-colors font-medium text-sm disabled:opacity-50"
+                                    className="flex items-center gap-2 px-4 py-2 bg-discord-fuchsia/10 text-discord-fuchsia hover:bg-discord-fuchsia/20 transition-colors font-medium text-sm disabled:opacity-50"
                                 >
                                     {isImportingPackage ? (
                                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -701,20 +673,20 @@ export function PlatformPage() {
                             </div>
 
                             {dataPackage && (
-                                <div className="mt-4 p-4 rounded-lg bg-discord-fuchsia/5 border border-discord-fuchsia/20">
+                                <div className="mt-4 p-4 bg-discord-fuchsia/5 border border-discord-fuchsia/20">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-medium text-white">Data Package Loaded</span>
+                                        <span className="text-sm font-medium text-burn-cream">Data Package Loaded</span>
                                         <button
                                             onClick={() => setDataPackage(null)}
-                                            className="text-xs text-dark-400 hover:text-white"
+                                            className="text-xs text-burn-muted hover:text-burn-cream"
                                         >
                                             Clear
                                         </button>
                                     </div>
-                                    <p className="text-sm text-dark-400">
+                                    <p className="text-sm text-burn-muted">
                                         {dataPackage.totalMessages.toLocaleString()} messages across {dataPackage.channelCount} channels ready for deletion.
                                     </p>
-                                    <p className="text-xs text-dark-500 mt-1">
+                                    <p className="text-xs text-burn-muted mt-1">
                                         When you start a deletion, the data package will be used automatically (no search needed).
                                     </p>
                                 </div>
@@ -1236,7 +1208,7 @@ export function PlatformPage() {
             {/* Back Button */}
             <button
                 onClick={() => navigate('/')}
-                className="flex items-center gap-2 text-dark-400 hover:text-white transition-colors mb-6"
+                className="flex items-center gap-2 text-burn-muted hover:text-burn-cream transition-colors mb-6"
             >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Dashboard</span>
@@ -1246,12 +1218,12 @@ export function PlatformPage() {
             <div className="flex items-center justify-between mb-8">
                 {/* ... header content ... */}
                 <div className="flex items-center gap-4">
-                    <div className={`p-4 rounded-2xl bg-gradient-to-br ${config.gradient}`}>
+                    <div className={`p-4 bg-gradient-to-br ${config.gradient}`}>
                         <PlatformIcon className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-white">{config.name}</h1>
-                        <p className="text-dark-400">
+                        <h1 className="font-heading text-2xl font-black text-burn-cream uppercase tracking-wider">{config.name}</h1>
+                        <p className="text-burn-muted">
                             {platform.connected ? (
                                 <span className="flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-discord-green"></span>
@@ -1265,7 +1237,7 @@ export function PlatformPage() {
                 {platform.connected && (
                     <button
                         onClick={handleDisconnect}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-dark-600 hover:bg-dark-700 text-dark-300 transition-colors text-sm"
+                        className="flex items-center gap-2 px-4 py-2 border border-dark-600 hover:bg-dark-700 text-burn-text transition-colors text-sm"
                     >
                         <LogOut className="w-4 h-4" />
                         Disconnect
@@ -1285,17 +1257,17 @@ export function PlatformPage() {
                         className="space-y-6 max-w-2xl mx-auto"
                     >
                         {/* Warning Banner */}
-                        <div className="flex items-start gap-4 p-5 rounded-xl bg-red-500/10 border-2 border-red-500/40 shadow-lg shadow-red-500/5">
-                            <div className="flex-shrink-0 mt-0.5 p-2 rounded-lg bg-red-500/20">
+                        <div className="flex items-start gap-4 p-5 bg-red-500/10 border-2 border-red-500/40 shadow-lg shadow-red-500/5">
+                            <div className="flex-shrink-0 mt-0.5 p-2 bg-red-500/20">
                                 <AlertTriangle className="w-6 h-6 text-red-400" />
                             </div>
                             <div>
                                 <p className="font-bold text-red-400 text-base">Account Risk Warning</p>
-                                <p className="text-sm text-dark-300 mt-2 leading-relaxed">
+                                <p className="text-sm text-burn-text mt-2 leading-relaxed">
                                     This tool uses your {config.name} account token to perform actions on your behalf.
-                                    Using self-bots or automated user accounts <strong className="text-white">violates {config.name}&apos;s Terms of Service</strong> and
+                                    Using self-bots or automated user accounts <strong className="text-burn-cream">violates {config.name}&apos;s Terms of Service</strong> and
                                     may result in your account being suspended or permanently banned.
-                                    Your data stays on your device. <strong className="text-white">Use at your own risk.</strong>
+                                    Your data stays on your device. <strong className="text-burn-cream">Use at your own risk.</strong>
                                 </p>
                             </div>
                         </div>
@@ -1304,8 +1276,8 @@ export function PlatformPage() {
                         <div className="glass-card p-8">
                             {/* ... same login form ... */}
                             <div className="text-center mb-8">
-                                <h3 className="text-xl font-bold text-white mb-2">Connect your account</h3>
-                                <p className="text-dark-400">Select a method to log in to Discord</p>
+                                <h3 className="text-xl font-bold text-burn-cream mb-2">Connect your account</h3>
+                                <p className="text-burn-muted">Select a method to log in to Discord</p>
                             </div>
 
                             <div className="space-y-4">
@@ -1313,7 +1285,7 @@ export function PlatformPage() {
                                     <button
                                         onClick={handleAutoLogin}
                                         disabled={isConnecting || !isElectron}
-                                        className="w-full flex items-center justify-center gap-3 p-4 rounded-xl font-bold text-white transition-all disabled:opacity-50 hover:opacity-90 active:scale-95"
+                                        className="w-full flex items-center justify-center gap-3 p-4 font-bold text-white transition-all disabled:opacity-50 hover:opacity-90 active:scale-95"
                                         style={{ backgroundColor: isElectron ? config.color : '#3f3f46' }}
                                     >
                                         {isConnecting ? (
@@ -1335,13 +1307,13 @@ export function PlatformPage() {
                                         <div className="w-full border-t border-dark-700"></div>
                                     </div>
                                     <div className="relative flex justify-center text-sm">
-                                        <span className="px-2 bg-dark-900 text-dark-500">Or use token</span>
+                                        <span className="px-2 bg-dark-950 text-burn-muted">Or use token</span>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={() => setShowManualInput(!showManualInput)}
-                                    className="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-dark-800 text-white font-medium hover:bg-dark-700 transition-all border border-dark-700"
+                                    className="w-full flex items-center justify-center gap-3 p-4 bg-dark-800 text-burn-cream font-medium hover:bg-dark-700 transition-all border border-dark-700"
                                 >
                                     <Key className="w-5 h-5" />
                                     Enter Token Manually
@@ -1372,7 +1344,7 @@ export function PlatformPage() {
                                             <button
                                                 onClick={handleManualConnect}
                                                 disabled={isConnecting || !manualToken.trim()}
-                                                className="w-full flex items-center justify-center gap-2 p-3 bg-dark-700 hover:bg-dark-600 rounded-lg text-white font-medium transition-colors"
+                                                className="w-full flex items-center justify-center gap-2 p-3 bg-dark-700 hover:bg-dark-600 text-burn-cream font-medium transition-colors"
                                             >
                                                 Connect
                                             </button>
@@ -1382,7 +1354,7 @@ export function PlatformPage() {
                             </AnimatePresence>
 
                             {error && (
-                                <div className="mt-6 flex items-center gap-2 p-4 rounded-xl bg-discord-red/10 border border-discord-red/30">
+                                <div className="mt-6 flex items-center gap-2 p-4 bg-discord-red/10 border border-discord-red/30">
                                     <AlertTriangle className="w-5 h-5 text-discord-red" />
                                     <p className="text-discord-red text-sm">{error}</p>
                                 </div>
@@ -1397,7 +1369,7 @@ export function PlatformPage() {
                         className="space-y-6"
                     >
                         {/* Tabs */}
-                        <div className="flex items-center gap-2 p-1 rounded-xl bg-dark-800/50 w-fit">
+                        <div className="flex items-center gap-2 p-1 bg-dark-800/50 w-fit">
                             {[
                                 { id: 'overview', label: 'Overview', icon: CheckCircle },
                                 { id: 'servers', label: 'Servers', icon: Users },
@@ -1407,10 +1379,10 @@ export function PlatformPage() {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id as any)}
                                     className={`
-                                        flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
+                                        flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all
                                         ${activeTab === tab.id
                                             ? 'bg-discord-blurple text-white shadow-lg shadow-discord-blurple/20'
-                                            : 'text-dark-400 hover:text-white hover:bg-dark-700'
+                                            : 'text-burn-muted hover:text-burn-cream hover:bg-dark-700'
                                         }
                                     `}
                                 >
@@ -1436,26 +1408,26 @@ export function PlatformPage() {
                         exit={{ y: 100, opacity: 0 }}
                         className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4"
                     >
-                        <div className="bg-dark-800/90 backdrop-blur-xl border border-dark-600 p-4 rounded-2xl shadow-2xl flex items-center justify-between">
+                        <div className="bg-dark-800/90 backdrop-blur-xl border border-dark-600 p-4 shadow-2xl flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                                <div className="p-2 rounded-lg bg-discord-blurple/20 text-discord-blurple">
+                                <div className="p-2 bg-discord-blurple/20 text-discord-blurple">
                                     <CheckCircle className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-white">{totalSelected} item{totalSelected !== 1 ? 's' : ''} selected</p>
-                                    <p className="text-sm text-dark-400">Ready to configure deletion</p>
+                                    <p className="font-bold text-burn-cream">{totalSelected} item{totalSelected !== 1 ? 's' : ''} selected</p>
+                                    <p className="text-sm text-burn-muted">Ready to configure deletion</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={clearSelection}
-                                    className="px-4 py-2 text-dark-400 hover:text-white font-medium transition-colors"
+                                    className="px-4 py-2 text-burn-muted hover:text-burn-cream font-medium transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={() => setShowDeletionModal(true)}
-                                    className="px-6 py-2 bg-discord-red hover:bg-discord-red/90 text-white font-bold rounded-lg shadow-lg shadow-discord-red/20 transition-all active:scale-95"
+                                    className="px-6 py-2 bg-discord-red hover:bg-discord-red/90 text-white font-bold shadow-lg shadow-discord-red/20 transition-all active:scale-95"
                                 >
                                     Configure & Delete
                                 </button>
@@ -1478,14 +1450,14 @@ export function PlatformPage() {
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
-                            className="w-full max-w-2xl bg-dark-900 border border-dark-700 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col"
+                            className="w-full max-w-2xl bg-dark-900 border border-dark-700 shadow-2xl max-h-[90vh] flex flex-col"
                         >
                             {/* Modal Header */}
                             <div className="p-6 border-b border-dark-700 flex items-center justify-between">
-                                <h2 className="text-xl font-bold text-white">Configure Deletion</h2>
+                                <h2 className="text-xl font-bold text-burn-cream">Configure Deletion</h2>
                                 <button
                                     onClick={() => setShowDeletionModal(false)}
-                                    className="p-2 text-dark-400 hover:text-white transition-colors"
+                                    className="p-2 text-burn-muted hover:text-burn-cream transition-colors"
                                 >
                                     <div className="w-6 h-6">✕</div>
                                 </button>
@@ -1497,44 +1469,44 @@ export function PlatformPage() {
                                 <div className="grid grid-cols-2 gap-4 mb-8">
                                     <div
                                         onClick={() => setDeletionMode('simple')}
-                                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${deletionMode === 'simple'
+                                        className={`p-4 border-2 cursor-pointer transition-all ${deletionMode === 'simple'
                                             ? 'border-discord-blurple bg-discord-blurple/10'
                                             : 'border-dark-700 hover:border-dark-600'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3 mb-2">
-                                            <div className="p-2 rounded-lg bg-discord-green/20 text-discord-green">
+                                            <div className="p-2 bg-discord-green/20 text-discord-green">
                                                 <CheckCircle className="w-5 h-5" />
                                             </div>
-                                            <h3 className="font-bold text-white">Easy Mode</h3>
+                                            <h3 className="font-bold text-burn-cream">Easy Mode</h3>
                                         </div>
-                                        <p className="text-sm text-dark-400">
+                                        <p className="text-sm text-burn-muted">
                                             Delete all your messages in the selected servers/DMs. Best for cleaning up quickly.
                                         </p>
                                     </div>
 
                                     <div
                                         onClick={() => setDeletionMode('advanced')}
-                                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${deletionMode === 'advanced'
+                                        className={`p-4 border-2 cursor-pointer transition-all ${deletionMode === 'advanced'
                                             ? 'border-discord-blurple bg-discord-blurple/10'
                                             : 'border-dark-700 hover:border-dark-600'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3 mb-2">
-                                            <div className="p-2 rounded-lg bg-discord-yellow/20 text-discord-yellow">
+                                            <div className="p-2 bg-discord-yellow/20 text-discord-yellow">
                                                 <Users className="w-5 h-5" />
                                             </div>
-                                            <h3 className="font-bold text-white">Advanced Mode</h3>
+                                            <h3 className="font-bold text-burn-cream">Advanced Mode</h3>
                                         </div>
-                                        <p className="text-sm text-dark-400">
+                                        <p className="text-sm text-burn-muted">
                                             Select specific channels from servers. Filter by date, keywords, or message type.
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* Common: Date Range Configuration */}
-                                <div className="mb-8 p-6 bg-dark-800 rounded-xl border border-dark-700">
-                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <div className="mb-8 p-6 bg-dark-800 border border-dark-700">
+                                    <h3 className="text-lg font-bold text-burn-cream mb-4 flex items-center gap-2">
                                         <div className="p-1 rounded bg-discord-blurple/20 text-discord-blurple">
                                             <CheckCircle className="w-4 h-4" />
                                         </div>
@@ -1544,7 +1516,7 @@ export function PlatformPage() {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         {/* From */}
                                         <div className="space-y-3">
-                                            <label className="text-sm font-medium text-dark-300">From</label>
+                                            <label className="text-sm font-medium text-burn-text">From</label>
                                             <div className="flex flex-wrap gap-2">
                                                 {[
                                                     { id: 'all_time', label: 'All Time' },
@@ -1556,9 +1528,9 @@ export function PlatformPage() {
                                                     <button
                                                         key={opt.id}
                                                         onClick={() => handlePresetChange('start', opt.id as TimePreset)}
-                                                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeDateFilter.startPreset === opt.id
+                                                        className={`px-3 py-1.5 text-xs font-medium transition-all ${activeDateFilter.startPreset === opt.id
                                                             ? 'bg-discord-blurple text-white'
-                                                            : 'bg-dark-700 text-dark-400 hover:text-white'
+                                                            : 'bg-dark-700 text-burn-muted hover:text-burn-cream'
                                                             }`}
                                                     >
                                                         {opt.label}
@@ -1566,9 +1538,9 @@ export function PlatformPage() {
                                                 ))}
                                                 <button
                                                     onClick={() => handlePresetChange('start', 'custom')}
-                                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeDateFilter.startPreset === 'custom'
+                                                    className={`px-3 py-1.5 text-xs font-medium transition-all ${activeDateFilter.startPreset === 'custom'
                                                         ? 'bg-discord-blurple text-white'
-                                                        : 'bg-dark-700 text-dark-400 hover:text-white'
+                                                        : 'bg-dark-700 text-burn-muted hover:text-burn-cream'
                                                         }`}
                                                 >
                                                     Custom
@@ -1584,7 +1556,7 @@ export function PlatformPage() {
 
                                         {/* To */}
                                         <div className="space-y-3">
-                                            <label className="text-sm font-medium text-dark-300">To</label>
+                                            <label className="text-sm font-medium text-burn-text">To</label>
                                             <div className="flex flex-wrap gap-2">
                                                 {[
                                                     { id: 'now', label: 'Now' },
@@ -1596,9 +1568,9 @@ export function PlatformPage() {
                                                     <button
                                                         key={opt.id}
                                                         onClick={() => handlePresetChange('end', opt.id as TimePreset)}
-                                                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeDateFilter.endPreset === opt.id
+                                                        className={`px-3 py-1.5 text-xs font-medium transition-all ${activeDateFilter.endPreset === opt.id
                                                             ? 'bg-discord-blurple text-white'
-                                                            : 'bg-dark-700 text-dark-400 hover:text-white'
+                                                            : 'bg-dark-700 text-burn-muted hover:text-burn-cream'
                                                             }`}
                                                     >
                                                         {opt.label}
@@ -1606,9 +1578,9 @@ export function PlatformPage() {
                                                 ))}
                                                 <button
                                                     onClick={() => handlePresetChange('end', 'custom')}
-                                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeDateFilter.endPreset === 'custom'
+                                                    className={`px-3 py-1.5 text-xs font-medium transition-all ${activeDateFilter.endPreset === 'custom'
                                                         ? 'bg-discord-blurple text-white'
-                                                        : 'bg-dark-700 text-dark-400 hover:text-white'
+                                                        : 'bg-dark-700 text-burn-muted hover:text-burn-cream'
                                                         }`}
                                                 >
                                                     Custom
@@ -1626,15 +1598,15 @@ export function PlatformPage() {
 
                                 {deletionMode === 'simple' ? (
                                     <div className="space-y-4">
-                                        <div className="p-4 rounded-xl bg-discord-blurple/10 border border-discord-blurple/30 flex items-start gap-3">
+                                        <div className="p-4 bg-discord-blurple/10 border border-discord-blurple/30 flex items-start gap-3">
                                             <CheckCircle className="w-5 h-5 text-discord-blurple mt-0.5" />
                                             <div>
-                                                <h4 className="font-bold text-white text-sm">Ready to clean</h4>
-                                                <p className="text-sm text-dark-300 mt-1">
+                                                <h4 className="font-bold text-burn-cream text-sm">Ready to clean</h4>
+                                                <p className="text-sm text-burn-text mt-1">
                                                     We will delete messages from
-                                                    <span className="text-white font-medium"> {activeDateFilter.startPreset === 'all_time' ? 'the beginning' : activeDateFilter.startDate} </span>
+                                                    <span className="text-burn-cream font-medium"> {activeDateFilter.startPreset === 'all_time' ? 'the beginning' : activeDateFilter.startDate} </span>
                                                     to
-                                                    <span className="text-white font-medium"> {activeDateFilter.endPreset === 'now' ? 'now' : activeDateFilter.endDate} </span>
+                                                    <span className="text-burn-cream font-medium"> {activeDateFilter.endPreset === 'now' ? 'now' : activeDateFilter.endDate} </span>
                                                     in all selected servers/DMs.
                                                 </p>
                                             </div>
@@ -1642,7 +1614,7 @@ export function PlatformPage() {
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
-                                        <h3 className="text-lg font-bold text-white">Target Specific Channels</h3>
+                                        <h3 className="text-lg font-bold text-burn-cream">Target Specific Channels</h3>
 
                                         {/* Iterate selected servers */}
                                         {Array.from(selectedGuilds).map(guildId => {
@@ -1672,7 +1644,7 @@ export function PlatformPage() {
                                             });
 
                                             return (
-                                                <div key={guildId} className="border border-dark-700 rounded-xl overflow-hidden">
+                                                <div key={guildId} className="border border-dark-700 overflow-hidden">
                                                     <div
                                                         className="p-4 bg-dark-800 flex items-center justify-between cursor-pointer hover:bg-dark-750"
                                                         onClick={() => toggleGuildExpand(guildId)}
@@ -1683,9 +1655,9 @@ export function PlatformPage() {
                                                             ) : (
                                                                 <div className="w-8 h-8 rounded-full bg-dark-600"></div>
                                                             )}
-                                                            <span className="font-bold text-white">{guild?.name}</span>
+                                                            <span className="font-bold text-burn-cream">{guild?.name}</span>
                                                         </div>
-                                                        <div className="text-dark-400">
+                                                        <div className="text-burn-muted">
                                                             {isExpanded ? '▼' : '▶'}
                                                         </div>
                                                     </div>
@@ -1693,7 +1665,7 @@ export function PlatformPage() {
                                                     {isExpanded && (
                                                         <div className="bg-dark-900 p-4 border-t border-dark-700">
                                                             {isLoadingChannels && enrichedChannels.length === 0 ? (
-                                                                <div className="text-center py-4 text-dark-400">Loading channels...</div>
+                                                                <div className="text-center py-4 text-burn-muted">Loading channels...</div>
                                                             ) : (
                                                                 <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
 
@@ -1704,20 +1676,20 @@ export function PlatformPage() {
 
                                                                         return (
                                                                             <div key={cat.id}>
-                                                                                <h4 className="text-xs font-bold text-dark-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                                                                                <h4 className="text-xs font-bold text-burn-muted uppercase tracking-wider mb-2 flex items-center gap-1">
                                                                                     {cat.name}
                                                                                 </h4>
                                                                                 <div className="space-y-1 ml-2 border-l-2 border-dark-700 pl-2">
                                                                                     {catChannels.map(channel => (
                                                                                         <div
                                                                                             key={channel.id}
-                                                                                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-dark-800 cursor-pointer"
+                                                                                            className="flex items-center gap-3 p-2 hover:bg-dark-800 cursor-pointer"
                                                                                             onClick={() => toggleChannelSelection(channel.id)}
                                                                                         >
                                                                                             <div className={`w-4 h-4 rounded border flex-shrink-0 ${selectedChannels.has(channel.id) ? 'bg-discord-blurple border-discord-blurple' : 'border-dark-500'}`}>
                                                                                                 {selectedChannels.has(channel.id) && <div className="text-white text-[10px] flex items-center justify-center h-full">✓</div>}
                                                                                             </div>
-                                                                                            <span className={`text-sm truncate ${selectedChannels.has(channel.id) ? 'text-white font-medium' : 'text-dark-300'}`}># {channel.name}</span>
+                                                                                            <span className={`text-sm truncate ${selectedChannels.has(channel.id) ? 'text-burn-cream font-medium' : 'text-burn-text'}`}># {channel.name}</span>
                                                                                         </div>
                                                                                     ))}
                                                                                 </div>
@@ -1728,25 +1700,25 @@ export function PlatformPage() {
                                                                     {/* Render Orphan Channels */}
                                                                     {orphanChannels.length > 0 && (
                                                                         <div>
-                                                                            {categories.length > 0 && <h4 className="text-xs font-bold text-dark-400 uppercase tracking-wider mb-2">Uncategorized</h4>}
+                                                                            {categories.length > 0 && <h4 className="text-xs font-bold text-burn-muted uppercase tracking-wider mb-2">Uncategorized</h4>}
                                                                             <div className="space-y-1 ml-2">
                                                                                 {orphanChannels.map(channel => (
                                                                                     <div
                                                                                         key={channel.id}
-                                                                                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-dark-800 cursor-pointer"
+                                                                                        className="flex items-center gap-3 p-2 hover:bg-dark-800 cursor-pointer"
                                                                                         onClick={() => toggleChannelSelection(channel.id)}
                                                                                     >
                                                                                         <div className={`w-4 h-4 rounded border flex-shrink-0 ${selectedChannels.has(channel.id) ? 'bg-discord-blurple border-discord-blurple' : 'border-dark-500'}`}>
                                                                                             {selectedChannels.has(channel.id) && <div className="text-white text-[10px] flex items-center justify-center h-full">✓</div>}
                                                                                         </div>
-                                                                                        <span className={`text-sm truncate ${selectedChannels.has(channel.id) ? 'text-white font-medium' : 'text-dark-300'}`}># {channel.name}</span>
+                                                                                        <span className={`text-sm truncate ${selectedChannels.has(channel.id) ? 'text-burn-cream font-medium' : 'text-burn-text'}`}># {channel.name}</span>
                                                                                     </div>
                                                                                 ))}
                                                                             </div>
                                                                         </div>
                                                                     )}
 
-                                                                    {enrichedChannels.length === 0 && <p className="text-dark-500 text-sm">No text channels found.</p>}
+                                                                    {enrichedChannels.length === 0 && <p className="text-burn-muted text-sm">No text channels found.</p>}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -1756,19 +1728,19 @@ export function PlatformPage() {
                                         })}
 
                                         {selectedGuilds.size === 0 && selectedDMs.size > 0 && (
-                                            <p className="text-dark-400 italic">Advanced channel selection is currently only available for Servers. For DMs, simple deletion applies to the whole conversation.</p>
+                                            <p className="text-burn-muted italic">Advanced channel selection is currently only available for Servers. For DMs, simple deletion applies to the whole conversation.</p>
                                         )}
                                     </div>
                                 )}
                             </div>
 
                             {/* Footer / Progress Area */}
-                            <div className="p-6 border-t border-dark-700 bg-dark-800/50 rounded-b-2xl">
+                            <div className="p-6 border-t border-dark-700 bg-dark-800/50">
                                 {isDeleting ? (
                                     <div className="flex flex-col items-center justify-center p-4 space-y-3">
                                         <Loader2 className="w-6 h-6 animate-spin text-discord-blurple" />
-                                        <span className="text-white font-medium">Starting background job...</span>
-                                        <p className="text-xs text-dark-400">You can close this window, the job will continue in background.</p>
+                                        <span className="text-burn-cream font-medium">Starting background job...</span>
+                                        <p className="text-xs text-burn-muted">You can close this window, the job will continue in background.</p>
                                     </div>
 
 
@@ -1776,15 +1748,15 @@ export function PlatformPage() {
                                     <div className="flex justify-end gap-3">
                                         <button
                                             onClick={() => setShowDeletionModal(false)}
-                                            className="px-4 py-2 text-dark-300 hover:text-white font-medium"
+                                            className="px-4 py-2 text-burn-text hover:text-burn-cream font-medium"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             onClick={handleStartDeletion}
                                             disabled={targetsCount === 0 || isDeleting}
-                                            className={`px-6 py-2 font-bold rounded-lg transition-all ${targetsCount === 0 || isDeleting
-                                                ? 'bg-dark-600 text-dark-400 cursor-not-allowed'
+                                            className={`px-6 py-2 font-bold transition-all ${targetsCount === 0 || isDeleting
+                                                ? 'bg-dark-600 text-burn-muted cursor-not-allowed'
                                                 : 'bg-discord-red hover:bg-discord-red/90 text-white shadow-lg shadow-discord-red/20 active:scale-95'
                                                 }`}
                                         >
@@ -1812,21 +1784,21 @@ export function PlatformPage() {
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
-                            className="w-full max-w-md bg-dark-900 border border-dark-700 rounded-2xl shadow-2xl"
+                            className="w-full max-w-md bg-dark-900 border border-dark-700 shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="p-6 border-b border-dark-700">
-                                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                                <h2 className="text-lg font-bold text-burn-cream flex items-center gap-2">
                                     <UserPlus className="w-5 h-5 text-discord-blurple" />
                                     Add DM by User ID
                                 </h2>
-                                <p className="text-sm text-dark-400 mt-1">
+                                <p className="text-sm text-burn-muted mt-1">
                                     Enter a Discord User ID to find an old/closed DM conversation.
                                 </p>
                             </div>
                             <div className="p-6 space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-dark-300 mb-2">
+                                    <label className="block text-sm font-medium text-burn-text mb-2">
                                         User ID
                                     </label>
                                     <input
@@ -1837,13 +1809,13 @@ export function PlatformPage() {
                                         className="input-field w-full"
                                         onKeyDown={(e) => e.key === 'Enter' && handleAddDMByUserId()}
                                     />
-                                    <p className="text-xs text-dark-500 mt-2">
+                                    <p className="text-xs text-burn-muted mt-2">
                                         💡 Right-click a user profile → Copy User ID
                                     </p>
                                 </div>
 
                                 {addDMError && (
-                                    <div className="p-3 rounded-lg bg-discord-red/10 border border-discord-red/30">
+                                    <div className="p-3 bg-discord-red/10 border border-discord-red/30">
                                         <p className="text-sm text-discord-red">{addDMError}</p>
                                     </div>
                                 )}
@@ -1855,15 +1827,15 @@ export function PlatformPage() {
                                         setAddDMUserId('');
                                         setAddDMError('');
                                     }}
-                                    className="px-4 py-2 text-dark-300 hover:text-white font-medium"
+                                    className="px-4 py-2 text-burn-text hover:text-burn-cream font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleAddDMByUserId}
                                     disabled={isAddingDM || !addDMUserId.trim()}
-                                    className={`px-6 py-2 font-bold rounded-lg transition-all flex items-center gap-2 ${isAddingDM || !addDMUserId.trim()
-                                        ? 'bg-dark-600 text-dark-400 cursor-not-allowed'
+                                    className={`px-6 py-2 font-bold transition-all flex items-center gap-2 ${isAddingDM || !addDMUserId.trim()
+                                        ? 'bg-dark-600 text-burn-muted cursor-not-allowed'
                                         : 'bg-discord-blurple hover:bg-discord-blurple/90 text-white'
                                         }`}
                                 >

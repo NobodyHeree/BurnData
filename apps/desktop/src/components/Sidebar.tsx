@@ -93,13 +93,22 @@ export function Sidebar() {
                                 key={item.name}
                                 to={item.href}
                                 className={`
-                  flex items-center gap-3 px-3 py-2.5 transition-all duration-200
+                  relative flex items-center gap-3 px-3 py-2.5 transition-all duration-200
                   ${isActive
                                         ? 'bg-dark-800 text-burn-cream'
                                         : 'text-burn-muted hover:text-burn-cream hover:bg-dark-800/50'
                                     }
                 `}
                             >
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="navActiveIndicator"
+                                        className="absolute left-0 w-1 h-6"
+                                        style={{ backgroundColor: '#FF3B00' }}
+                                        initial={false}
+                                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                                    />
+                                )}
                                 <item.icon className="w-5 h-5" />
                                 <span className="font-semibold flex-1">{item.name}</span>
                                 {showBadge && (

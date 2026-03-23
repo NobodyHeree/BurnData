@@ -170,11 +170,6 @@ export function PSNPage() {
     const handleLogout = async () => {
         if (!window.electronAPI) return;
 
-        // Confirm logout (French for consistency)
-        if (!confirm('Are you sure you want to disconnect from PlayStation Network? This will clear all cached data.')) {
-            return;
-        }
-
         console.log('[PSNPage] Logging out from PSN...');
 
         try {
@@ -529,24 +524,24 @@ export function PSNPage() {
             <div className="flex-1 p-6 overflow-auto">
                 <div className="max-w-2xl mx-auto">
                     <div className="flex items-center gap-4 mb-8">
-                        <div className="p-3 rounded-xl bg-[#003791]/20">
+                        <div className="p-3 bg-[#003791]/20">
                             <PlayStationLogo className="w-8 h-8 text-[#003791]" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-white">PlayStation Network</h1>
-                            <p className="text-dark-400">Mass unfriend your PSN friends list</p>
+                            <h1 className="font-heading text-2xl font-black text-burn-cream uppercase tracking-wider">PlayStation Network</h1>
+                            <p className="text-burn-muted">Mass unfriend your PSN friends list</p>
                         </div>
                     </div>
 
-                    <div className="bg-dark-800/50 rounded-xl border border-dark-700 p-6">
-                        <h2 className="text-lg font-semibold text-white mb-4">Connect with NPSSO Token</h2>
+                    <div className="glass-card p-6">
+                        <h2 className="font-heading text-lg font-black text-burn-cream uppercase tracking-wider mb-4">Connect with NPSSO Token</h2>
 
-                        <div className="bg-dark-900/50 rounded-lg p-4 mb-6">
-                            <h3 className="text-sm font-medium text-white mb-2">How to get your NPSSO token:</h3>
-                            <ol className="text-sm text-dark-400 space-y-2">
+                        <div className="bg-dark-900/50 p-4 mb-6">
+                            <h3 className="text-sm font-medium text-burn-cream mb-2">How to get your NPSSO token:</h3>
+                            <ol className="text-sm text-burn-muted space-y-2">
                                 <li>1. Log in to <a href="https://www.playstation.com" target="_blank" rel="noopener noreferrer" className="text-[#003791] hover:underline">playstation.com</a></li>
                                 <li>2. Visit the token URL below</li>
-                                <li>3. Copy the <code className="text-white bg-dark-700 px-1 rounded">npsso</code> value</li>
+                                <li>3. Copy the <code className="text-burn-cream bg-dark-700 px-1">npsso</code> value</li>
                                 <li>4. Paste it here</li>
                             </ol>
                             <a
@@ -562,7 +557,7 @@ export function PSNPage() {
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-dark-300 mb-2">
+                                <label className="block text-sm font-medium text-burn-text mb-2">
                                     NPSSO Token
                                 </label>
                                 <input
@@ -570,12 +565,12 @@ export function PSNPage() {
                                     value={npssoToken}
                                     onChange={(e) => setNpssoToken(e.target.value)}
                                     placeholder="Paste your NPSSO token here..."
-                                    className="w-full px-4 py-3 bg-dark-900 border border-dark-700 rounded-lg text-white placeholder-dark-500 focus:outline-none focus:border-[#003791] transition-colors"
+                                    className="input-field w-full px-4 py-3"
                                 />
                             </div>
 
                             {loginError && (
-                                <div className="flex items-center gap-2 text-red-400 text-sm">
+                                <div className="flex items-center gap-2 text-burn-red text-sm">
                                     <XCircle className="w-4 h-4" />
                                     {loginError}
                                 </div>
@@ -584,7 +579,7 @@ export function PSNPage() {
                             <button
                                 onClick={handleLogin}
                                 disabled={isLoggingIn || !npssoToken.trim()}
-                                className="w-full py-3 bg-[#003791] hover:bg-[#003791]/80 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium text-white transition-colors flex items-center justify-center gap-2"
+                                className="w-full py-3 bg-[#003791] hover:bg-[#003791]/80 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-white transition-colors flex items-center justify-center gap-2"
                             >
                                 {isLoggingIn ? (
                                     <>
@@ -600,9 +595,9 @@ export function PSNPage() {
                             </button>
                         </div>
 
-                        <div className="mt-6 flex items-start gap-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                            <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
-                            <p className="text-sm text-yellow-200">
+                        <div className="mt-6 flex items-start gap-3 p-3 bg-[rgba(255,184,0,0.1)] border border-[rgba(255,184,0,0.3)]">
+                            <AlertTriangle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+                            <p className="text-sm text-gold">
                                 Keep your NPSSO token private. It provides access to your PSN account. We store it securely and only locally.
                             </p>
                         </div>
@@ -619,12 +614,12 @@ export function PSNPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-xl bg-[#003791]/20">
+                        <div className="p-3 bg-[#003791]/20">
                             <PlayStationLogo className="w-8 h-8 text-[#003791]" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-white">PlayStation Network</h1>
-                            <p className="text-dark-400">
+                            <h1 className="font-heading text-2xl font-black text-burn-cream uppercase tracking-wider">PlayStation Network</h1>
+                            <p className="text-burn-muted">
                                 {friends.length} friends
                                 {hasPresenceData && ` • ${stats.online} online`}
                                 {` • ${filteredFriends.length} shown`}
@@ -633,7 +628,7 @@ export function PSNPage() {
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 px-4 py-2 bg-dark-800 hover:bg-dark-700 rounded-lg text-dark-300 hover:text-white transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 bg-dark-800 hover:bg-dark-700 text-burn-text hover:text-burn-cream transition-colors"
                     >
                         <LogOut className="w-4 h-4" />
                         Disconnect
@@ -642,24 +637,24 @@ export function PSNPage() {
 
                 {/* Presence Loading Indicator */}
                 {isLoadingPresence && (
-                    <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                    <div className="mb-6 p-4 bg-fire/10 border border-fire/30">
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
-                                <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                                <Loader2 className="w-5 h-5 animate-spin text-fire" />
                                 <div>
-                                    <h3 className="font-medium text-blue-400">Loading Online Status & Platforms</h3>
-                                    <p className="text-sm text-dark-400">
+                                    <h3 className="font-medium text-fire">Loading Online Status & Platforms</h3>
+                                    <p className="text-sm text-burn-muted">
                                         {presenceProgress.current}/{presenceProgress.total} friends loaded
                                     </p>
                                 </div>
                             </div>
-                            <span className="text-sm text-dark-400">
+                            <span className="text-sm text-burn-muted">
                                 {Math.round((presenceProgress.current / presenceProgress.total) * 100)}%
                             </span>
                         </div>
-                        <div className="h-2 bg-dark-700 rounded-full overflow-hidden">
+                        <div className="h-2 bg-dark-700 overflow-hidden">
                             <div
-                                className="h-full bg-blue-500 transition-all duration-300"
+                                className="h-full bg-fire transition-all duration-300"
                                 style={{ width: `${(presenceProgress.current / presenceProgress.total) * 100}%` }}
                             />
                         </div>
@@ -669,10 +664,10 @@ export function PSNPage() {
                 {/* Stats Pie Charts */}
                 {hasPresenceData && (
                     <div className="mb-6">
-                        <h3 className="text-sm font-medium text-dark-400 mb-3">Friend Statistics</h3>
+                        <h3 className="font-heading text-sm font-black text-burn-cream uppercase tracking-wider mb-3">Friend Statistics</h3>
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-4 bg-dark-800/50 rounded-xl border border-dark-700">
-                                <h3 className="text-sm font-medium text-dark-400 mb-3">Platform Distribution</h3>
+                            <div className="glass-card p-4">
+                                <h3 className="font-heading text-sm font-black text-burn-cream uppercase tracking-wider mb-3">Platform Distribution</h3>
                                 <div className="flex items-center gap-4">
                                     <div className="relative w-20 h-20">
                                         <svg className="w-20 h-20 -rotate-90" viewBox="0 0 36 36">
@@ -689,38 +684,38 @@ export function PSNPage() {
                                             />
                                         </svg>
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <span className="text-lg font-bold text-white">{stats.ps5 + stats.ps4}</span>
+                                            <span className="text-lg font-bold text-burn-cream">{stats.ps5 + stats.ps4}</span>
                                         </div>
                                     </div>
                                     <div className="flex-1 space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-3 h-3 rounded-full bg-blue-500" />
-                                                <span className="text-sm text-dark-300">PS5</span>
+                                                <span className="text-sm text-burn-text">PS5</span>
                                             </div>
-                                            <span className="text-sm font-medium text-white">{stats.ps5}</span>
+                                            <span className="text-sm font-medium text-burn-cream">{stats.ps5}</span>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-3 h-3 rounded-full bg-purple-500" />
-                                                <span className="text-sm text-dark-300">PS4</span>
+                                                <span className="text-sm text-burn-text">PS4</span>
                                             </div>
-                                            <span className="text-sm font-medium text-white">{stats.ps4}</span>
+                                            <span className="text-sm font-medium text-burn-cream">{stats.ps4}</span>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-3 h-3 rounded-full bg-gray-600" />
-                                                <span className="text-sm text-dark-300">Unknown</span>
+                                                <span className="text-sm text-burn-text">Unknown</span>
                                             </div>
-                                            <span className="text-sm font-medium text-white">{stats.total - stats.ps5 - stats.ps4}</span>
+                                            <span className="text-sm font-medium text-burn-cream">{stats.total - stats.ps5 - stats.ps4}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Online Status */}
-                            <div className="p-4 bg-dark-800/50 rounded-xl border border-dark-700">
-                                <h3 className="text-sm font-medium text-dark-400 mb-3">Online Status</h3>
+                            <div className="glass-card p-4">
+                                <h3 className="font-heading text-sm font-black text-burn-cream uppercase tracking-wider mb-3">Online Status</h3>
                                 <div className="flex items-center gap-4">
                                     <div className="relative w-20 h-20">
                                         <svg className="w-20 h-20 -rotate-90" viewBox="0 0 36 36">
@@ -737,25 +732,25 @@ export function PSNPage() {
                                             />
                                         </svg>
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <span className="text-lg font-bold text-white">{stats.total}</span>
+                                            <span className="text-lg font-bold text-burn-cream">{stats.total}</span>
                                         </div>
                                     </div>
                                     <div className="flex-1 space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-3 h-3 rounded-full bg-green-500" />
-                                                <span className="text-sm text-dark-300">Online</span>
+                                                <div className="w-3 h-3 rounded-full bg-burn-green" />
+                                                <span className="text-sm text-burn-text">Online</span>
                                             </div>
-                                            <span className="text-sm font-medium text-green-400">{stats.online}</span>
+                                            <span className="text-sm font-medium text-burn-green">{stats.online}</span>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-3 h-3 rounded-full bg-gray-600" />
-                                                <span className="text-sm text-dark-300">Offline</span>
+                                                <span className="text-sm text-burn-text">Offline</span>
                                             </div>
-                                            <span className="text-sm font-medium text-white">{stats.total - stats.online}</span>
+                                            <span className="text-sm font-medium text-burn-cream">{stats.total - stats.online}</span>
                                         </div>
-                                        <div className="text-xs text-dark-500 mt-1">
+                                        <div className="text-xs text-burn-muted mt-1">
                                             {((stats.online / stats.total) * 100).toFixed(1)}% online right now
                                         </div>
                                     </div>
@@ -766,21 +761,21 @@ export function PSNPage() {
                 )}
 
                 {/* Filter Bar */}
-                <div className="flex flex-wrap items-center gap-3 mb-4 p-4 bg-dark-800/50 rounded-xl border border-dark-700">
-                    <Filter className="w-5 h-5 text-dark-400" />
+                <div className="flex flex-wrap items-center gap-3 mb-4 p-4 glass-card">
+                    <Filter className="w-5 h-5 text-burn-muted" />
 
                     {/* Sort */}
                     <div className="flex items-center gap-1">
                         <button
                             onClick={() => setSortOrder(sortOrder === 'a-z' ? 'none' : 'a-z')}
-                            className={`p-2 rounded-lg transition-colors ${sortOrder === 'a-z' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                            className={`p-2 transition-colors ${sortOrder === 'a-z' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                             title="Sort A-Z"
                         >
                             <ArrowUpAZ className="w-4 h-4" />
                         </button>
                         <button
                             onClick={() => setSortOrder(sortOrder === 'z-a' ? 'none' : 'z-a')}
-                            className={`p-2 rounded-lg transition-colors ${sortOrder === 'z-a' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                            className={`p-2 transition-colors ${sortOrder === 'z-a' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                             title="Sort Z-A"
                         >
                             <ArrowDownAZ className="w-4 h-4" />
@@ -789,7 +784,7 @@ export function PSNPage() {
                             <>
                                 <button
                                     onClick={() => setSortOrder(sortOrder === 'last-online-recent' ? 'none' : 'last-online-recent')}
-                                    className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm transition-colors ${sortOrder === 'last-online-recent' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                                    className={`flex items-center gap-1 px-2 py-1.5 text-sm transition-colors ${sortOrder === 'last-online-recent' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                                     title="Most Recent Online First"
                                 >
                                     <Clock3 className="w-4 h-4" />
@@ -797,7 +792,7 @@ export function PSNPage() {
                                 </button>
                                 <button
                                     onClick={() => setSortOrder(sortOrder === 'last-online-old' ? 'none' : 'last-online-old')}
-                                    className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm transition-colors ${sortOrder === 'last-online-old' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                                    className={`flex items-center gap-1 px-2 py-1.5 text-sm transition-colors ${sortOrder === 'last-online-old' ? 'bg-[#003791] text-white' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                                     title="Oldest Online First"
                                 >
                                     <Clock3 className="w-4 h-4" />
@@ -812,7 +807,7 @@ export function PSNPage() {
                     {/* Filter buttons */}
                     <button
                         onClick={() => setFilterType(filterType === 'plus' ? 'all' : 'plus')}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors ${filterType === 'plus' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition-colors ${filterType === 'plus' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                     >
                         <Crown className="w-4 h-4" />
                         PS+ ({stats.plus})
@@ -822,27 +817,27 @@ export function PSNPage() {
                         <>
                             <button
                                 onClick={() => setFilterType(filterType === 'online' ? 'all' : 'online')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors ${filterType === 'online' ? 'bg-green-500/20 text-green-400' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition-colors ${filterType === 'online' ? 'bg-burn-green/20 text-burn-green' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                             >
                                 <Wifi className="w-4 h-4" />
                                 Online ({stats.online})
                             </button>
                             <button
                                 onClick={() => setFilterType(filterType === 'offline' ? 'all' : 'offline')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors ${filterType === 'offline' ? 'bg-gray-500/20 text-gray-400' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition-colors ${filterType === 'offline' ? 'bg-gray-500/20 text-gray-400' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                             >
                                 <WifiOff className="w-4 h-4" />
                                 Offline
                             </button>
                             <button
                                 onClick={() => setFilterType(filterType === 'ps5' ? 'all' : 'ps5')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors ${filterType === 'ps5' ? 'bg-blue-500/20 text-blue-400' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition-colors ${filterType === 'ps5' ? 'bg-blue-500/20 text-blue-400' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                             >
                                 PS5 ({stats.ps5})
                             </button>
                             <button
                                 onClick={() => setFilterType(filterType === 'ps4' ? 'all' : 'ps4')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors ${filterType === 'ps4' ? 'bg-purple-500/20 text-purple-400' : 'bg-dark-700 text-dark-300 hover:text-white'}`}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition-colors ${filterType === 'ps4' ? 'bg-purple-500/20 text-purple-400' : 'bg-dark-700 text-burn-text hover:text-burn-cream'}`}
                             >
                                 PS4 ({stats.ps4})
                             </button>
@@ -853,11 +848,11 @@ export function PSNPage() {
                         <>
                             <div className="w-px h-6 bg-dark-600" />
                             <div className="flex items-center gap-2">
-                                <Globe className="w-4 h-4 text-dark-400" />
+                                <Globe className="w-4 h-4 text-burn-muted" />
                                 <select
                                     value={languageFilter}
                                     onChange={(e) => setLanguageFilter(e.target.value)}
-                                    className="px-2 py-1.5 bg-dark-700 border border-dark-600 rounded-lg text-sm text-white focus:outline-none focus:border-[#003791]"
+                                    className="px-2 py-1.5 bg-dark-700 border border-dark-600 text-sm text-burn-cream focus:outline-none focus:border-[#003791]"
                                 >
                                     <option value="all">All Languages</option>
                                     {availableLanguages.map(lang => (
@@ -875,7 +870,7 @@ export function PSNPage() {
                                 setLanguageFilter('all');
                                 setSortOrder('none');
                             }}
-                            className="ml-auto text-sm text-dark-400 hover:text-white transition-colors"
+                            className="ml-auto text-sm text-burn-muted hover:text-burn-cream transition-colors"
                         >
                             Clear filters
                         </button>
@@ -885,25 +880,25 @@ export function PSNPage() {
                 {/* Action Bar */}
                 <div className="flex items-center gap-4 mb-6">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-500" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-burn-muted" />
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search friends..."
-                            className="w-full pl-10 pr-4 py-2.5 bg-dark-800 border border-dark-700 rounded-lg text-white placeholder-dark-500 focus:outline-none focus:border-[#003791] transition-colors"
+                            className="input-field w-full pl-10 pr-4 py-2.5"
                         />
                     </div>
 
                     <button
                         onClick={selectAll}
-                        className="px-4 py-2.5 bg-dark-800 hover:bg-dark-700 rounded-lg text-dark-300 hover:text-white transition-colors text-sm"
+                        className="px-4 py-2.5 bg-dark-800 hover:bg-dark-700 text-burn-text hover:text-burn-cream transition-colors text-sm"
                     >
                         Select All
                     </button>
                     <button
                         onClick={deselectAll}
-                        className="px-4 py-2.5 bg-dark-800 hover:bg-dark-700 rounded-lg text-dark-300 hover:text-white transition-colors text-sm"
+                        className="px-4 py-2.5 bg-dark-800 hover:bg-dark-700 text-burn-text hover:text-burn-cream transition-colors text-sm"
                     >
                         Deselect All
                     </button>
@@ -919,7 +914,7 @@ export function PSNPage() {
                                     }
                                     e.target.value = '0'; // Reset dropdown
                                 }}
-                                className="px-4 py-2.5 bg-dark-800 border border-dark-700 rounded-lg text-dark-300 hover:text-white hover:bg-dark-700 transition-colors text-sm cursor-pointer focus:outline-none focus:border-[#003791]"
+                                className="px-4 py-2.5 bg-dark-800 border border-dark-700 text-burn-text hover:text-burn-cream hover:bg-dark-700 transition-colors text-sm cursor-pointer focus:outline-none focus:border-[#003791]"
                                 defaultValue="0"
                             >
                                 <option value="0" disabled>Quick Select Inactive...</option>
@@ -938,7 +933,7 @@ export function PSNPage() {
                     <button
                         onClick={handleUnfriendClick}
                         disabled={selectedFriends.size === 0 || !!activeUnfriendJob}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white font-medium transition-colors"
+                        className="flex items-center gap-2 px-4 py-2.5 bg-burn-red hover:bg-burn-red/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium transition-colors"
                     >
                         <UserMinus className="w-5 h-5" />
                         {activeUnfriendJob ? 'Unfriending...' : `Unfriend (${selectedFriends.size})`}
@@ -947,35 +942,35 @@ export function PSNPage() {
 
                 {/* Progress bar - Show active job */}
                 {activeUnfriendJob && (
-                    <div className="mb-6 p-4 bg-dark-800/50 rounded-lg border border-dark-700">
+                    <div className="mb-6 p-4 glass-card">
                         <div className="flex items-center justify-between mb-2">
-                            <span className="text-white font-medium">Unfriending...</span>
-                            <span className="text-dark-400">
+                            <span className="text-burn-cream font-medium">Unfriending...</span>
+                            <span className="text-burn-muted">
                                 {activeUnfriendJob.deletedItems + activeUnfriendJob.failedItems} / {activeUnfriendJob.totalItems}
                             </span>
                         </div>
-                        <div className="h-2 bg-dark-700 rounded-full overflow-hidden">
+                        <div className="h-2 bg-dark-700 overflow-hidden">
                             <motion.div
-                                className="h-full bg-red-500"
+                                className="h-full bg-burn-red"
                                 initial={{ width: 0 }}
                                 animate={{ width: `${activeUnfriendJob.progress}%` }}
                             />
                         </div>
                         <div className="flex gap-4 mt-2 text-sm">
-                            <span className="text-green-400">Removed: {activeUnfriendJob.deletedItems}</span>
-                            <span className="text-red-400">Failed: {activeUnfriendJob.failedItems}</span>
+                            <span className="text-burn-green">Removed: {activeUnfriendJob.deletedItems}</span>
+                            <span className="text-burn-red">Failed: {activeUnfriendJob.failedItems}</span>
                         </div>
                     </div>
                 )}
 
                 {/* Friends List */}
-                <div className="bg-dark-800/50 rounded-xl border border-dark-700 overflow-hidden">
+                <div className="glass-card overflow-hidden">
                     {isLoadingFriends ? (
                         <div className="flex items-center justify-center py-12">
                             <Loader2 className="w-8 h-8 text-[#003791] animate-spin" />
                         </div>
                     ) : filteredFriends.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-dark-400">
+                        <div className="flex flex-col items-center justify-center py-12 text-burn-muted">
                             <Users className="w-12 h-12 mb-3 opacity-50" />
                             <p>{searchQuery || filterType !== 'all' ? 'No friends match your filters' : 'No friends found'}</p>
                         </div>
@@ -987,14 +982,14 @@ export function PSNPage() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     className={`flex items-center gap-4 p-4 cursor-pointer transition-colors ${selectedFriends.has(friend.accountId)
-                                        ? 'bg-red-500/10'
+                                        ? 'bg-burn-red/10'
                                         : 'hover:bg-dark-700/50'
                                         }`}
                                     onClick={() => toggleFriend(friend.accountId)}
                                 >
                                     {/* Checkbox */}
-                                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${selectedFriends.has(friend.accountId)
-                                        ? 'bg-red-500 border-red-500'
+                                    <div className={`w-5 h-5 border-2 flex items-center justify-center transition-colors ${selectedFriends.has(friend.accountId)
+                                        ? 'bg-burn-red border-burn-red'
                                         : 'border-dark-600'
                                         }`}>
                                         {selectedFriends.has(friend.accountId) && (
@@ -1012,23 +1007,23 @@ export function PSNPage() {
                                             />
                                         ) : (
                                             <div className="w-10 h-10 rounded-full bg-dark-600 flex items-center justify-center">
-                                                <Users className="w-5 h-5 text-dark-400" />
+                                                <Users className="w-5 h-5 text-burn-muted" />
                                             </div>
                                         )}
                                         {friend.onlineStatus === 'online' && (
-                                            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-dark-800" />
+                                            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-burn-green rounded-full border-2 border-dark-800" />
                                         )}
                                     </div>
 
                                     {/* Name & Info */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <p className="font-medium text-white truncate">{friend.onlineId}</p>
+                                            <p className="font-medium text-burn-cream truncate">{friend.onlineId}</p>
                                             {friend.isPlus && (
                                                 <Crown className="w-4 h-4 text-yellow-500 flex-shrink-0" />
                                             )}
                                             {friend.platform && (
-                                                <span className={`text-xs px-1.5 py-0.5 rounded ${friend.platform.toUpperCase() === 'PS5'
+                                                <span className={`text-xs px-1.5 py-0.5 ${friend.platform.toUpperCase() === 'PS5'
                                                     ? 'bg-blue-500/20 text-blue-400'
                                                     : 'bg-purple-500/20 text-purple-400'
                                                     }`}>
@@ -1036,9 +1031,9 @@ export function PSNPage() {
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-sm text-dark-500 truncate">
+                                        <p className="text-sm text-burn-muted truncate">
                                             {friend.currentGame ? (
-                                                <span className="text-green-400">Playing: {friend.currentGame}</span>
+                                                <span className="text-burn-green">Playing: {friend.currentGame}</span>
                                             ) : friend.lastOnlineDate ? (
                                                 <span>Last online: {formatLastOnline(friend.lastOnlineDate)}</span>
                                             ) : (
@@ -1049,7 +1044,7 @@ export function PSNPage() {
 
                                     {/* Status */}
                                     {selectedFriends.has(friend.accountId) && (
-                                        <span className="text-sm text-red-400 flex-shrink-0">Will be removed</span>
+                                        <span className="text-sm text-burn-red flex-shrink-0">Will be removed</span>
                                     )}
                                 </motion.div>
                             ))}
@@ -1061,7 +1056,7 @@ export function PSNPage() {
                 <button
                     onClick={() => loadFriends(false)}
                     disabled={isLoadingFriends}
-                    className="mt-4 w-full py-3 bg-dark-800 hover:bg-dark-700 rounded-lg text-dark-300 hover:text-white transition-colors flex items-center justify-center gap-2"
+                    className="mt-4 w-full py-3 bg-dark-800 hover:bg-dark-700 text-burn-text hover:text-burn-cream transition-colors flex items-center justify-center gap-2"
                 >
                     {isLoadingFriends ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -1077,65 +1072,65 @@ export function PSNPage() {
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            className="bg-dark-800 rounded-xl border border-dark-700 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                            className="bg-dark-800 border border-dark-700 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                         >
                             {/* Header */}
                             <div className="p-6 border-b border-dark-700">
                                 <div className="flex items-center justify-between mb-2">
-                                    <h2 className="text-2xl font-bold text-white">Confirm Unfriend</h2>
+                                    <h2 className="font-heading text-2xl font-black text-burn-cream uppercase tracking-wider">Confirm Unfriend</h2>
                                     <button
                                         onClick={() => setShowPreviewModal(false)}
-                                        className="p-2 hover:bg-dark-700 rounded-lg transition-colors"
+                                        className="p-2 hover:bg-dark-700 transition-colors"
                                     >
-                                        <XCircle className="w-6 h-6 text-dark-400" />
+                                        <XCircle className="w-6 h-6 text-burn-muted" />
                                     </button>
                                 </div>
-                                <p className="text-dark-400">
-                                    You are about to remove <span className="text-red-400 font-semibold">{previewStats.total} friends</span> from your PlayStation Network.
+                                <p className="text-burn-muted">
+                                    You are about to remove <span className="text-burn-red font-semibold">{previewStats.total} friends</span> from your PlayStation Network.
                                 </p>
                             </div>
 
                             {/* Stats */}
                             <div className="p-6 border-b border-dark-700">
-                                <h3 className="text-sm font-medium text-dark-400 mb-3">Selection Statistics</h3>
+                                <h3 className="font-heading text-sm font-black text-burn-cream uppercase tracking-wider mb-3">Selection Statistics</h3>
                                 <div className="grid grid-cols-2 gap-3">
-                                    <div className="p-3 bg-dark-900/50 rounded-lg">
+                                    <div className="p-3 bg-dark-900/50">
                                         <div className="flex items-center gap-2 mb-1">
                                             <Crown className="w-4 h-4 text-yellow-500" />
-                                            <span className="text-sm text-dark-400">PS+ Members</span>
+                                            <span className="text-sm text-burn-muted">PS+ Members</span>
                                         </div>
-                                        <p className="text-lg font-semibold text-white">{previewStats.plus}</p>
+                                        <p className="text-lg font-semibold text-burn-cream">{previewStats.plus}</p>
                                     </div>
-                                    <div className="p-3 bg-dark-900/50 rounded-lg">
+                                    <div className="p-3 bg-dark-900/50">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <Wifi className="w-4 h-4 text-green-500" />
-                                            <span className="text-sm text-dark-400">Currently Online</span>
+                                            <Wifi className="w-4 h-4 text-burn-green" />
+                                            <span className="text-sm text-burn-muted">Currently Online</span>
                                         </div>
-                                        <p className="text-lg font-semibold text-white">{previewStats.online}</p>
+                                        <p className="text-lg font-semibold text-burn-cream">{previewStats.online}</p>
                                     </div>
-                                    <div className="p-3 bg-dark-900/50 rounded-lg">
+                                    <div className="p-3 bg-dark-900/50">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="text-sm text-blue-400 font-bold">PS5</span>
                                         </div>
-                                        <p className="text-lg font-semibold text-white">{previewStats.ps5}</p>
+                                        <p className="text-lg font-semibold text-burn-cream">{previewStats.ps5}</p>
                                     </div>
-                                    <div className="p-3 bg-dark-900/50 rounded-lg">
+                                    <div className="p-3 bg-dark-900/50">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="text-sm text-purple-400 font-bold">PS4</span>
                                         </div>
-                                        <p className="text-lg font-semibold text-white">{previewStats.ps4}</p>
+                                        <p className="text-lg font-semibold text-burn-cream">{previewStats.ps4}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Preview of friends */}
                             <div className="p-6 border-b border-dark-700">
-                                <h3 className="text-sm font-medium text-dark-400 mb-3">
+                                <h3 className="font-heading text-sm font-black text-burn-cream uppercase tracking-wider mb-3">
                                     Preview ({previewStats.sample.length} of {previewStats.total} shown)
                                 </h3>
                                 <div className="space-y-2 max-h-64 overflow-y-auto">
                                     {previewStats.sample.map((friend) => (
-                                        <div key={friend.accountId} className="flex items-center gap-3 p-2 bg-dark-900/50 rounded-lg">
+                                        <div key={friend.accountId} className="flex items-center gap-3 p-2 bg-dark-900/50">
                                             {friend.avatarUrl ? (
                                                 <img
                                                     src={friend.avatarUrl}
@@ -1144,15 +1139,15 @@ export function PSNPage() {
                                                 />
                                             ) : (
                                                 <div className="w-10 h-10 rounded-full bg-dark-600 flex items-center justify-center">
-                                                    <Users className="w-5 h-5 text-dark-400" />
+                                                    <Users className="w-5 h-5 text-burn-muted" />
                                                 </div>
                                             )}
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2">
-                                                    <p className="font-medium text-white truncate">{friend.onlineId}</p>
+                                                    <p className="font-medium text-burn-cream truncate">{friend.onlineId}</p>
                                                     {friend.isPlus && <Crown className="w-3 h-3 text-yellow-500" />}
                                                     {friend.platform && (
-                                                        <span className={`text-xs px-1 py-0.5 rounded ${
+                                                        <span className={`text-xs px-1 py-0.5 ${
                                                             friend.platform.toUpperCase() === 'PS5'
                                                                 ? 'bg-blue-500/20 text-blue-400'
                                                                 : 'bg-purple-500/20 text-purple-400'
@@ -1162,7 +1157,7 @@ export function PSNPage() {
                                                     )}
                                                 </div>
                                                 {friend.lastOnlineDate && (
-                                                    <p className="text-xs text-dark-500">
+                                                    <p className="text-xs text-burn-muted">
                                                         Last online: {formatLastOnline(friend.lastOnlineDate)}
                                                     </p>
                                                 )}
@@ -1170,7 +1165,7 @@ export function PSNPage() {
                                         </div>
                                     ))}
                                     {previewStats.total > 10 && (
-                                        <p className="text-sm text-dark-500 text-center py-2">
+                                        <p className="text-sm text-burn-muted text-center py-2">
                                             ... and {previewStats.total - 10} more
                                         </p>
                                     )}
@@ -1182,27 +1177,27 @@ export function PSNPage() {
                                 <div className="flex items-center gap-3">
                                     <button
                                         onClick={exportFriendsList}
-                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-dark-700 hover:bg-dark-600 rounded-lg text-white transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-dark-700 hover:bg-dark-600 text-burn-cream transition-colors"
                                     >
                                         <ExternalLink className="w-5 h-5" />
                                         Export as JSON
                                     </button>
                                     <button
                                         onClick={() => setShowPreviewModal(false)}
-                                        className="px-6 py-3 bg-dark-700 hover:bg-dark-600 rounded-lg text-white transition-colors"
+                                        className="px-6 py-3 bg-dark-700 hover:bg-dark-600 text-burn-cream transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={confirmUnfriend}
                                         disabled={confirmCountdown > 0}
-                                        className="px-6 py-3 bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white font-semibold transition-colors"
+                                        className="px-6 py-3 bg-burn-red hover:bg-burn-red/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold transition-colors"
                                     >
                                         {confirmCountdown > 0 ? `Confirm (${confirmCountdown})` : 'Confirm Unfriend'}
                                     </button>
                                 </div>
                                 {confirmCountdown > 0 && (
-                                    <p className="text-xs text-dark-500 text-center mt-3">
+                                    <p className="text-xs text-burn-muted text-center mt-3">
                                         Confirmation will be available in {confirmCountdown} second{confirmCountdown !== 1 ? 's' : ''}...
                                     </p>
                                 )}
