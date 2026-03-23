@@ -12,7 +12,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Windows-blue?logo=windows&logoColor=white" />
   <img src="https://img.shields.io/badge/version-1.0.0-orange" />
-  <img src="https://img.shields.io/github/license/NobodyHeree/DeleteData?color=green" />
+  <img src="https://img.shields.io/github/license/NobodyHeree/BurnData?color=green" />
   <img src="https://img.shields.io/badge/electron-28-blueviolet?logo=electron&logoColor=white" />
 </p>
 
@@ -51,14 +51,14 @@ BurnData lets you mass-delete your data from platforms like Discord and PlayStat
 
 ## Download
 
-Grab the latest installer from [**Releases**](https://github.com/NobodyHeree/DeleteData/releases).
+Grab the latest installer from [**Releases**](https://github.com/NobodyHeree/BurnData/releases).
 
 > Windows only for now. macOS/Linux coming later.
 
 ## Build from source
 
 ```bash
-git clone https://github.com/NobodyHeree/DeleteData.git
+git clone https://github.com/NobodyHeree/BurnData.git
 cd DeleteData
 pnpm install
 pnpm dev
