@@ -38,6 +38,12 @@ function createWindow() {
     // Content Security Policy (production only — Vite dev server needs inline scripts for HMR)
     if (!isDev) {
         session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+            // Only apply CSP to our own app pages, not login windows on other partitions
+            const isAppPage = details.url.startsWith('file://') || details.url.startsWith('devtools://');
+            if (!isAppPage) {
+                callback({ responseHeaders: details.responseHeaders });
+                return;
+            }
             callback({
                 responseHeaders: {
                     ...details.responseHeaders,
