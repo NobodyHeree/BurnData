@@ -21,7 +21,6 @@ describe('StateManager', () => {
         try { rmSync(tmpDir, { recursive: true, force: true }); } catch {}
     });
 
-    // ── Initialization ────────────────────────────────────────────
 
     describe('initialization', () => {
         it('creates fresh state when no file exists', () => {
@@ -65,7 +64,6 @@ describe('StateManager', () => {
         });
     });
 
-    // ── Target management ─────────────────────────────────────────
 
     describe('initTargets', () => {
         it('initializes targets from config', () => {
@@ -135,7 +133,6 @@ describe('StateManager', () => {
         });
     });
 
-    // ── Deletion tracking ─────────────────────────────────────────
 
     describe('markDeleted', () => {
         it('tracks deleted message IDs and increments counter', () => {
@@ -178,7 +175,6 @@ describe('StateManager', () => {
         });
     });
 
-    // ── isComplete ────────────────────────────────────────────────
 
     describe('isComplete', () => {
         it('returns false while targets remain', () => {
@@ -195,7 +191,6 @@ describe('StateManager', () => {
         });
     });
 
-    // ── trimDeletedIds ────────────────────────────────────────────
 
     describe('trimDeletedIds', () => {
         it('caps deletedIds to maxPerChannel (keeps last N)', () => {
@@ -225,7 +220,6 @@ describe('StateManager', () => {
         });
     });
 
-    // ── Auto-save ─────────────────────────────────────────────────
 
     describe('auto-save', () => {
         it('saves to disk after 10s interval when dirty', () => {
@@ -241,7 +235,6 @@ describe('StateManager', () => {
         });
     });
 
-    // ── destroy ───────────────────────────────────────────────────
 
     describe('destroy', () => {
         it('saves and clears interval', () => {
@@ -256,7 +249,6 @@ describe('StateManager', () => {
         });
     });
 
-    // ── setDataPackageLoaded ──────────────────────────────────────
 
     describe('setDataPackageLoaded', () => {
         it('sets flag', () => {

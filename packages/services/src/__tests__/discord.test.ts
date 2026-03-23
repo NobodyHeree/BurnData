@@ -56,7 +56,6 @@ describe('DiscordService', () => {
         vi.useRealTimers();
     });
 
-    // ── validateToken ──────────────────────────────────────────────
 
     describe('validateToken', () => {
         it('returns user object and stores userId on success', async () => {
@@ -92,7 +91,6 @@ describe('DiscordService', () => {
         });
     });
 
-    // ── filterMessages ─────────────────────────────────────────────
 
     describe('filterMessages', () => {
         // Set userId by calling validateToken first
@@ -226,7 +224,6 @@ describe('DiscordService', () => {
         });
     });
 
-    // ── Rate limit handling ────────────────────────────────────────
 
     describe('rate limit handling', () => {
         it('retries after a 429 response with retry_after', async () => {
@@ -270,7 +267,6 @@ describe('DiscordService', () => {
         });
     });
 
-    // ── deleteMessage ──────────────────────────────────────────────
 
     describe('deleteMessage', () => {
         it('returns true on successful deletion (204)', async () => {
@@ -309,7 +305,6 @@ describe('DiscordService', () => {
         });
     });
 
-    // ── Error handling ─────────────────────────────────────────────
 
     describe('error handling', () => {
         it('retries on ECONNRESET network errors and succeeds', async () => {
@@ -377,7 +372,6 @@ describe('DiscordService', () => {
         });
     });
 
-    // ── getGuilds / getDMChannels ──────────────────────────────────
 
     describe('getGuilds', () => {
         it('returns guild list', async () => {

@@ -285,18 +285,16 @@ export const useAppStore = create<AppState>()(
                 psnFriends: state.psnFriends,
                 psnHasPresenceData: state.psnHasPresenceData,
             }),
-            onRehydrateStorage: () => (state) => {
-                if (!state) return;
-                // Jobs that were running/pending when the page closed can't resume — mark them paused
-                const orphaned = state.jobs.some(j => j.status === 'running' || j.status === 'pending');
-                if (orphaned) {
+            onRehydrateStorage: () => (state, error) => {
+                if (!state || error) return;
+                const hasOrphaned = state.jobs.some(j => j.status === 'running' || j.status === 'pending');
+                if (hasOrphaned) {
                     state.jobs = state.jobs.map(j =>
                         j.status === 'running' || j.status === 'pending'
                             ? { ...j, status: 'paused' as const }
                             : j
                     );
                 }
-                // Reset transient loading flags that can't survive a reload
                 state.psnPresenceLoading = false;
             },
         }

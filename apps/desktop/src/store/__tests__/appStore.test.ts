@@ -20,7 +20,6 @@ describe('appStore', () => {
         return mod.useAppStore;
     }
 
-    // ── Initial state ─────────────────────────────────────────────
 
     describe('initial state', () => {
         it('has discord and psn platforms disconnected', async () => {
@@ -48,7 +47,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── Platform actions ──────────────────────────────────────────
 
     describe('platform actions', () => {
         it('connectPlatform sets connected + token + user', async () => {
@@ -82,7 +80,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── Job actions ───────────────────────────────────────────────
 
     describe('job actions', () => {
         const makeJob = (overrides: Partial<import('../appStore').DeletionJob> = {}): import('../appStore').DeletionJob => ({
@@ -140,7 +137,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── Computed values ───────────────────────────────────────────
 
     describe('computed values', () => {
         it('getTotalDeleted sums across all platforms', async () => {
@@ -178,7 +174,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── Persistence — token stripping ─────────────────────────────
 
     describe('persistence', () => {
         it('does not persist tokens to localStorage', async () => {
@@ -201,7 +196,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── Rehydration — orphaned job recovery ───────────────────────
 
     describe('rehydration', () => {
         it('marks running/pending jobs as paused on reload', async () => {
@@ -263,7 +257,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── localStorage migration ────────────────────────────────────
 
     describe('localStorage migration', () => {
         it('migrates from old deletedata-storage key', async () => {
@@ -292,7 +285,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── Toasts ────────────────────────────────────────────────────
 
     describe('toasts', () => {
         it('addToast generates unique ID', async () => {
@@ -315,7 +307,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── Settings ──────────────────────────────────────────────────
 
     describe('settings', () => {
         it('updateSettings merges partial updates', async () => {
@@ -328,7 +319,6 @@ describe('appStore', () => {
         });
     });
 
-    // ── PSN state ─────────────────────────────────────────────────
 
     describe('PSN state', () => {
         it('setPSNFriends updates friends list', async () => {

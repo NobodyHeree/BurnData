@@ -33,7 +33,6 @@ describe('PSNService', () => {
         vi.useRealTimers();
     });
 
-    // ── authenticateWithNpsso ──────────────────────────────────────
 
     describe('authenticateWithNpsso', () => {
         it('exchanges NPSSO token for access token through redirect chain', async () => {
@@ -112,7 +111,6 @@ describe('PSNService', () => {
         });
     });
 
-    // ── getFriends (getFriendIds + getProfiles) ────────────────────
 
     describe('getFriendIds', () => {
         it('returns list of friend account IDs', async () => {
@@ -213,7 +211,6 @@ describe('PSNService', () => {
         });
     });
 
-    // ── removeFriend ───────────────────────────────────────────────
 
     describe('removeFriend', () => {
         it('returns true on successful removal', async () => {
@@ -260,7 +257,6 @@ describe('PSNService', () => {
         });
     });
 
-    // ── removeFriends (bulk) ───────────────────────────────────────
 
     describe('removeFriends', () => {
         it('removes multiple friends and reports progress', async () => {
@@ -286,7 +282,6 @@ describe('PSNService', () => {
         });
     });
 
-    // ── getPresenceBatch ───────────────────────────────────────────
 
     describe('getPresenceBatch', () => {
         it('returns presence data for multiple accounts', async () => {
@@ -384,7 +379,6 @@ describe('PSNService', () => {
         });
     });
 
-    // ── getMyProfile ───────────────────────────────────────────────
 
     describe('getMyProfile', () => {
         it('returns account ID and online ID', async () => {
@@ -400,7 +394,6 @@ describe('PSNService', () => {
         });
     });
 
-    // ── getFriendsWithProfiles ─────────────────────────────────────
 
     describe('getFriendsWithProfiles', () => {
         it('returns empty array when user has no friends', async () => {

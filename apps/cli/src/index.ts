@@ -25,10 +25,11 @@ interface RateLimitInfo {
     resetAfterMs: number | null;
 }
 
+// Aligned with SmartRateLimiter presets in @services
 const SPEED_CONFIGS = {
-    conservative: { burstSize: 4, burstPauseMs: 12000, minDelayMs: 400, baseDelayMs: 1200 },
-    balanced: { burstSize: 5, burstPauseMs: 5000, minDelayMs: 200, baseDelayMs: 800 },
-    aggressive: { burstSize: 5, burstPauseMs: 2000, minDelayMs: 50, baseDelayMs: 400 },
+    conservative: { burstSize: 3, burstPauseMs: 15000, minDelayMs: 500, baseDelayMs: 1500 },
+    balanced: { burstSize: 5, burstPauseMs: 10000, minDelayMs: 200, baseDelayMs: 1000 },
+    aggressive: { burstSize: 8, burstPauseMs: 8000, minDelayMs: 100, baseDelayMs: 800 },
 };
 
 const DISCORD_API = 'https://discord.com/api/v10';

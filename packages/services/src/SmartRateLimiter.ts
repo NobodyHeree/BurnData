@@ -54,6 +54,8 @@ export class SmartRateLimiter {
     private burstCount = 0;
     private consecutive429s = 0;
     private lastRequestTime = 0;
+    private pausedSince = 0;
+    private totalPausedMs = 0;
     private _isPaused = false;
     private _isCancelled = false;
 
@@ -77,8 +79,14 @@ export class SmartRateLimiter {
         Object.assign(this.config, config);
     }
 
-    pause() { this._isPaused = true; }
-    resume() { this._isPaused = false; }
+    pause() { this._isPaused = true; this.pausedSince = Date.now(); }
+    resume() {
+        if (this._isPaused && this.pausedSince > 0) {
+            this.totalPausedMs += Date.now() - this.pausedSince;
+            this.pausedSince = 0;
+        }
+        this._isPaused = false;
+    }
     cancel() { this._isCancelled = true; this._isPaused = false; }
 
     reset() {
@@ -87,6 +95,8 @@ export class SmartRateLimiter {
         this.burstCount = 0;
         this.consecutive429s = 0;
         this.lastRequestTime = 0;
+        this.pausedSince = 0;
+        this.totalPausedMs = 0;
         this.stats.totalRequests = 0;
     }
 
@@ -208,7 +218,8 @@ export class SmartRateLimiter {
             return (remainingMessages * perMsg) + (burstsRemaining * this.config.burstPauseMs);
         }
 
-        const elapsed = Date.now() - this.lastRequestTime;
+        const activePause = this._isPaused && this.pausedSince > 0 ? Date.now() - this.pausedSince : 0;
+        const elapsed = Date.now() - this.lastRequestTime - this.totalPausedMs - activePause;
         const msPerMessage = elapsed / this.stats.totalRequests;
         return Math.round(remainingMessages * msPerMessage);
     }

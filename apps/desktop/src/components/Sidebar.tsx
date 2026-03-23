@@ -55,8 +55,7 @@ export function Sidebar() {
                                 {isActive && (
                                     <motion.div
                                         layoutId="activeIndicator"
-                                        className="absolute left-0 w-1 h-6"
-                                        style={{ backgroundColor: '#FF3B00' }}
+                                        className="absolute left-0 w-1 h-6 bg-fire"
                                         initial={false}
                                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                                     />
@@ -103,8 +102,7 @@ export function Sidebar() {
                                 {isActive && (
                                     <motion.div
                                         layoutId="navActiveIndicator"
-                                        className="absolute left-0 w-1 h-6"
-                                        style={{ backgroundColor: '#FF3B00' }}
+                                        className="absolute left-0 w-1 h-6 bg-fire"
                                         initial={false}
                                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                                     />

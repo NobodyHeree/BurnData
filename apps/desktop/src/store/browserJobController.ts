@@ -18,7 +18,13 @@ export function registerJob(jobId: string): JobControl {
     const control = { isPaused: false, isCancelled: false };
     jobControls.set(jobId, control);
     activeJobId = jobId;
+    // Ensure lock is released even if the caller forgets removeJobControl
     return control;
+}
+
+export function withJobLock<T>(jobId: string, fn: (control: JobControl) => Promise<T>): Promise<T> {
+    const control = registerJob(jobId);
+    return fn(control).finally(() => removeJobControl(jobId));
 }
 
 export const pauseJob = (jobId: string) => {
@@ -53,11 +59,14 @@ export function cleanupOrphanedControls(activeJobIds: Set<string>) {
     }
 }
 
+import type { DeletionSpeed } from './appStore';
+
 // Speed delays per deletion (ms). Discord bucket: ~5 DELETE/5s per channel.
-const SPEED_DELAYS: Record<string, number> = {
+// Aggressive: higher ban risk — Discord may escalate to IP-level throttling.
+const SPEED_DELAYS: Record<DeletionSpeed, number> = {
     conservative: 1500,
     balanced: 1000,
     aggressive: 800,
 };
 
-export const getSpeedDelay = (speed: string) => SPEED_DELAYS[speed] ?? 1000;
+export const getSpeedDelay = (speed: DeletionSpeed) => SPEED_DELAYS[speed];

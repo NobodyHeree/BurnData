@@ -16,7 +16,6 @@ describe('deletedTracker', () => {
         return await import('../deletedTracker');
     }
 
-    // ── Basic operations ──────────────────────────────────────────
 
     describe('markDeleted + flushDeleted', () => {
         it('stores and retrieves deleted IDs after flush', async () => {
@@ -48,7 +47,6 @@ describe('deletedTracker', () => {
         });
     });
 
-    // ── Auto-flush at 100 pending ─────────────────────────────────
 
     describe('auto-flush', () => {
         it('flushes automatically when pending count reaches 100', async () => {
@@ -62,7 +60,6 @@ describe('deletedTracker', () => {
         });
     });
 
-    // ── filterOutDeleted ──────────────────────────────────────────
 
     describe('filterOutDeleted', () => {
         it('removes already-deleted IDs from array', async () => {
@@ -76,7 +73,6 @@ describe('deletedTracker', () => {
         });
     });
 
-    // ── clearDeletedForChannel / clearAllDeleted ──────────────────
 
     describe('clear operations', () => {
         it('clearDeletedForChannel removes only that channel', async () => {
@@ -102,7 +98,6 @@ describe('deletedTracker', () => {
         });
     });
 
-    // ── Per-channel cap (50k) ─────────────────────────────────────
 
     describe('overflow caps', () => {
         it('caps per-channel IDs at 50,000 (keeps most recent)', async () => {
@@ -151,7 +146,6 @@ describe('deletedTracker', () => {
         });
     });
 
-    // ── Migration ─────────────────────────────────────────────────
 
     describe('migration', () => {
         it('migrates from old deletedata-deleted-ids key', async () => {

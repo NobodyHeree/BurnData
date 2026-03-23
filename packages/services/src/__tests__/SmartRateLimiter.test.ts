@@ -14,7 +14,6 @@ describe('SmartRateLimiter', () => {
         vi.useRealTimers();
     });
 
-    // ── Constructor & presets ─────────────────────────────────────
 
     describe('presets', () => {
         it('defaults to balanced preset', () => {
@@ -43,7 +42,6 @@ describe('SmartRateLimiter', () => {
         });
     });
 
-    // ── waitAfterRequest ──────────────────────────────────────────
 
     describe('waitAfterRequest', () => {
         it('increments totalRequests on each call', async () => {
@@ -99,7 +97,6 @@ describe('SmartRateLimiter', () => {
         });
     });
 
-    // ── Burst pacing ──────────────────────────────────────────────
 
     describe('burst pacing', () => {
         it('triggers burst pause after burstSize successful requests', { timeout: 30000 }, async () => {
@@ -131,7 +128,6 @@ describe('SmartRateLimiter', () => {
         });
     });
 
-    // ── handleRateLimit — 429 escalation ─────────────────────────
 
     describe('handleRateLimit', () => {
         it('tracks consecutive 429s and throttle stats', () => {
@@ -181,7 +177,6 @@ describe('SmartRateLimiter', () => {
         });
     });
 
-    // ── Pause / Resume / Cancel ──────────────────────────────────
 
     describe('pause/resume/cancel', () => {
         it('pause sets isPaused, resume clears it', () => {
@@ -228,7 +223,6 @@ describe('SmartRateLimiter', () => {
         });
     });
 
-    // ── reset ─────────────────────────────────────────────────────
 
     describe('reset', () => {
         it('clears all state', async () => {
@@ -246,7 +240,6 @@ describe('SmartRateLimiter', () => {
         });
     });
 
-    // ── getETR ────────────────────────────────────────────────────
 
     describe('getETR', () => {
         it('estimates from config when not enough data', () => {
@@ -269,7 +262,6 @@ describe('SmartRateLimiter', () => {
         });
     });
 
-    // ── setConfig ─────────────────────────────────────────────────
 
     describe('setConfig', () => {
         it('overrides individual config values', async () => {
