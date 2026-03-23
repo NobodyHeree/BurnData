@@ -52,7 +52,7 @@ function createWindow() {
                         "script-src 'self'; " +
                         "style-src 'self' 'unsafe-inline'; " +
                         "img-src 'self' data: https://cdn.discordapp.com https://image.api.playstation.com; " +
-                        "connect-src 'self'; " +
+                        "connect-src 'self' https://discord.com https://*.discord.com https://*.playstation.com; " +
                         "font-src 'self'; " +
                         "object-src 'none'; " +
                         "base-uri 'self'"
