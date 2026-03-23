@@ -4,7 +4,6 @@ export type {
     DiscordGuild,
     DiscordChannel,
     DiscordMessage,
-    DeletionProgress,
     DeletionFilter,
     RateLimitInfo,
     DeleteResult,

@@ -9,7 +9,6 @@ if (!localStorage.getItem(NEW_STORAGE_KEY) && localStorage.getItem(OLD_STORAGE_K
     localStorage.removeItem(OLD_STORAGE_KEY);
 }
 
-// Types
 export interface Platform {
     id: string;
     name: string;

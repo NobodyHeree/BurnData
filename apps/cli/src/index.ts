@@ -8,8 +8,6 @@ import JSZip from 'jszip';
 import { WebhookNotifier } from './webhook.js';
 import { StateManager, type ChannelState } from './state.js';
 
-// ========== Types ==========
-
 interface Config {
     discord_token: string;
     webhook_url?: string;
@@ -27,15 +25,11 @@ interface RateLimitInfo {
     resetAfterMs: number | null;
 }
 
-// ========== Rate Limit Config ==========
-
 const SPEED_CONFIGS = {
     conservative: { burstSize: 4, burstPauseMs: 12000, minDelayMs: 400, baseDelayMs: 1200 },
     balanced: { burstSize: 5, burstPauseMs: 5000, minDelayMs: 200, baseDelayMs: 800 },
     aggressive: { burstSize: 5, burstPauseMs: 2000, minDelayMs: 50, baseDelayMs: 400 },
 };
-
-// ========== Globals ==========
 
 const DISCORD_API = 'https://discord.com/api/v10';
 let isShuttingDown = false;
@@ -43,8 +37,6 @@ let config: Config;
 let webhook: WebhookNotifier;
 let state: StateManager;
 let logFile: string | null = null;
-
-// ========== Logging ==========
 
 function log(level: 'INFO' | 'WARN' | 'ERROR', message: string) {
     const ts = new Date().toISOString();
@@ -55,7 +47,7 @@ function log(level: 'INFO' | 'WARN' | 'ERROR', message: string) {
     }
 }
 
-// ========== Discord API ==========
+// --- Discord API helpers ---
 
 function headers() {
     return {
@@ -138,8 +130,6 @@ async function deleteMessage(channelId: string, messageId: string): Promise<{ su
     }
 }
 
-// ========== Data Package ==========
-
 async function loadDataPackage(zipPath: string): Promise<Record<string, string[]>> {
     log('INFO', `Loading data package: ${zipPath}`);
     const data = readFileSync(zipPath);
@@ -197,8 +187,6 @@ async function loadDataPackage(zipPath: string): Promise<Record<string, string[]
     log('INFO', `Data package: ${totalMsgs.toLocaleString()} messages across ${Object.keys(channelMessages).length} channels`);
     return channelMessages;
 }
-
-// ========== Deletion Engine ==========
 
 async function scanChannel(channelId: string, userId: string): Promise<{ channelId: string; messageId: string }[]> {
     const messages: { channelId: string; messageId: string }[] = [];
@@ -398,8 +386,6 @@ async function processTarget(target: ChannelState, dataPackage: Record<string, s
     await webhook.jobCompleted({ label: target.label }, deleted, failed, duration);
 }
 
-// ========== Main ==========
-
 async function main() {
     // Load config
     const configPath = process.argv[2] || 'config.yaml';
@@ -523,8 +509,6 @@ async function main() {
     process.exit(0);
 }
 
-// ========== Utilities ==========
-
 function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -538,7 +522,6 @@ function formatDuration(ms: number): string {
     return `${s}s`;
 }
 
-// ========== Crash Handlers ==========
 process.on('uncaughtException', async (err) => {
     log('ERROR', `Uncaught exception: ${err.message}`);
     try {
@@ -557,7 +540,6 @@ process.on('unhandledRejection', async (reason: any) => {
     process.exit(1);
 });
 
-// ========== Run ==========
 main().catch(async err => {
     log('ERROR', `Fatal error: ${err.message}`);
     try {

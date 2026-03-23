@@ -229,5 +229,3 @@ export class SmartRateLimiter {
         return Math.round(remainingMessages * msPerMessage);
     }
 }
-
-export default SmartRateLimiter;

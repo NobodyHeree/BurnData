@@ -87,5 +87,3 @@ export function PlatformCard({
         </motion.div>
     );
 }
-
-export default PlatformCard;

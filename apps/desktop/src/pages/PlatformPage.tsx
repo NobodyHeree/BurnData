@@ -53,32 +53,26 @@ export function PlatformPage() {
     const { platformId } = useParams<{ platformId: string }>();
     const navigate = useNavigate();
 
-    // Store
     const platform = useAppStore((state) => state.platforms[platformId || '']);
     const connectPlatform = useAppStore((state) => state.connectPlatform);
     const disconnectPlatform = useAppStore((state) => state.disconnectPlatform);
 
-    // File input ref for browser ZIP import
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Local state
     const [isConnecting, setIsConnecting] = useState(false);
     const [error, setError] = useState('');
     const [showManualInput, setShowManualInput] = useState(false);
     const [manualToken, setManualToken] = useState('');
 
-    // Deletion Flow State
     const [activeTab, setActiveTab] = useState<'overview' | 'servers' | 'dms'>('overview');
     const [isLoadingData, setIsLoadingData] = useState(false);
     const [guilds, setGuilds] = useState<DiscordGuild[]>([]);
     const [dms, setDms] = useState<DiscordChannel[]>([]);
     const [, setDiscordService] = useState<DiscordService | null>(null);
 
-    // Search State
     const [serverSearch, setServerSearch] = useState('');
     const [dmSearch, setDmSearch] = useState('');
 
-    // Data Package State
     const [dataPackage, setDataPackage] = useState<{
         channels: Record<string, { channelId: string; name: string; messageIds: string[]; count: number }>;
         totalMessages: number;
@@ -116,13 +110,11 @@ export function PlatformPage() {
         }
     };
 
-    // Add DM by ID State
     const [showAddDMModal, setShowAddDMModal] = useState(false);
     const [addDMUserId, setAddDMUserId] = useState('');
     const [isAddingDM, setIsAddingDM] = useState(false);
     const [addDMError, setAddDMError] = useState('');
 
-    // Handle adding DM by user ID
     const handleAddDMByUserId = async () => {
         if (!addDMUserId.trim()) return;
 
@@ -177,7 +169,6 @@ export function PlatformPage() {
         }
     };
 
-    // Selection State
     const [selectedGuilds, setSelectedGuilds] = useState<Set<string>>(new Set());
     const [selectedDMs, setSelectedDMs] = useState<Set<string>>(new Set());
 
@@ -388,7 +379,6 @@ export function PlatformPage() {
 
     const PlatformIcon = config.icon;
 
-    // Render Tab Content
     const renderTabContent = () => {
         if (isLoadingData) {
             return (
@@ -443,11 +433,6 @@ export function PlatformPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {filteredGuilds.map(guild => {
                                 const isSelected = selectedGuilds.has(guild.id);
-                                // Check if any channel in this guild has data in the package
-                                const _guildPackageCount = dataPackage ? Object.values(dataPackage.channels)
-                                    .filter(ch => ch.name?.toLowerCase().includes(guild.name.toLowerCase()))
-                                    .reduce((sum, ch) => sum + ch.count, 0) : 0;
-                                void _guildPackageCount; // TODO: unreliable guild name matching
                                 return (
                                     <div
                                         key={guild.id}
@@ -701,36 +686,18 @@ export function PlatformPage() {
         }
     };
 
-    // ... (rest of renderTabContent)
-
-    // Deletion Modal State
     const [showDeletionModal, setShowDeletionModal] = useState(false);
     const [deletionMode, setDeletionMode] = useState<'simple' | 'advanced'>('simple');
-
-    // Store Actions
     const addJob = useAppStore(state => state.addJob);
-
-
-    // Deletion Execution State
     const [isDeleting, setIsDeleting] = useState(false);
-
-    // Progress Listener
-    // Local progress listener removed in favor of global JobManager
 
     const handleStartDeletion = async () => {
         setIsDeleting(true);
-        // Map date presets to actual strings handled by backend logic/defaults
-        // If "all_time", empty string logic (handled in backend by "if startDate...")
-        // Actually I should calculate the final strings here to be sure.
 
         const currentFilter = deletionMode === 'simple' ? easyDateFilter : advancedDateFilter;
         let finalStart = currentFilter.startDate;
         let finalEnd = currentFilter.endDate;
 
-        // Ensure presets are calculated if they are set (even if custom date is empty, the calculation logic updates state... wait, the logic update state on click. So state is likely correct.)
-        // Double check custom: if Preset is 'custom', dateFilter.startDate is the value. Correct.
-
-        // Build data package message IDs map if available
         const dataPackageMessages: Record<string, string[]> | undefined = dataPackage
             ? Object.fromEntries(
                 Object.entries(dataPackage.channels).map(([chId, ch]) => [chId, ch.messageIds])
@@ -994,7 +961,6 @@ export function PlatformPage() {
 
 
 
-    // Date & Filter State
     type TimePreset = 'all_time' | 'year' | 'month' | 'week' | 'yesterday' | 'now' | 'custom';
 
     interface DateFilterState {
@@ -1014,7 +980,6 @@ export function PlatformPage() {
     const [easyDateFilter, setEasyDateFilter] = useState<DateFilterState>(defaultDateFilter);
     const [advancedDateFilter, setAdvancedDateFilter] = useState<DateFilterState>(defaultDateFilter);
 
-    // Helper to get current active filter
     const activeDateFilter = deletionMode === 'simple' ? easyDateFilter : advancedDateFilter;
     const setActiveDateFilter = deletionMode === 'simple' ? setEasyDateFilter : setAdvancedDateFilter;
 
@@ -1049,13 +1014,11 @@ export function PlatformPage() {
         }));
     };
 
-    // Advanced Mode State
     const [expandedGuilds, setExpandedGuilds] = useState<Set<string>>(new Set());
     const [guildChannels, setGuildChannels] = useState<Record<string, DiscordChannel[]>>({});
     const [selectedChannels, setSelectedChannels] = useState<Set<string>>(new Set());
     const [isLoadingChannels, setIsLoadingChannels] = useState(false);
 
-    // Fetch channels for a guild
     const loadGuildChannels = async (guildId: string) => {
         if (guildChannels[guildId]) return; // Already loaded
 
@@ -1099,7 +1062,6 @@ export function PlatformPage() {
         setSelectedChannels(newSelected);
     };
 
-    // Browser ZIP import handler
     const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -1108,9 +1070,6 @@ export function PlatformPage() {
             const JSZip = (await import('jszip')).default;
             const zip = await JSZip.loadAsync(file);
 
-            // Debug: log all file paths in the ZIP
-            const allPaths = Object.keys(zip.files);
-            console.log('[Import] ZIP contains', allPaths.length, 'files');
             // Find index.json (case-insensitive path matching)
             let indexData: Record<string, string> = {};
             for (const [path, zipEntry] of Object.entries(zip.files)) {

@@ -1,6 +1,6 @@
 /**
  * Core platform adapter interface.
- * Every platform service (Discord, PSN, Twitter, etc.) must implement this.
+ * Every platform service (Discord, PSN, etc.) must implement this.
  */
 
 import { AuthResult } from './auth';
@@ -8,11 +8,7 @@ import { ContentFilter } from './filter';
 
 export type PlatformCapability =
     | 'delete-messages'
-    | 'delete-posts'
-    | 'delete-comments'
-    | 'delete-likes'
     | 'delete-friends'
-    | 'delete-activity'
     | 'export-data';
 
 export interface PlatformInfo {
@@ -27,7 +23,7 @@ export interface PlatformInfo {
 export interface ContentSource {
     id: string;
     name: string;
-    type: 'channel' | 'server' | 'feed' | 'profile' | 'friend-list' | 'subreddit' | 'thread';
+    type: 'channel' | 'server' | 'profile' | 'friend-list';
     parentId?: string;
     itemCount?: number;
     metadata?: Record<string, unknown>;

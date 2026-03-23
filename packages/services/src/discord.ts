@@ -46,14 +46,6 @@ export interface DiscordMessage {
     attachments: { id: string; filename: string; url: string }[];
 }
 
-export interface DeletionProgress {
-    total: number;
-    deleted: number;
-    failed: number;
-    current?: DiscordMessage;
-    status: 'running' | 'paused' | 'completed' | 'failed';
-}
-
 export interface DeletionFilter {
     channelIds?: string[];
     guildIds?: string[];
@@ -82,8 +74,6 @@ export interface DeleteResult {
 export class DiscordService {
     private token: string;
     private userId: string | null = null;
-    private isPaused = false;
-    private isCancelled = false;
 
     constructor(token: string) {
         this.token = token;
@@ -350,80 +340,6 @@ export class DiscordService {
     }
 
     /**
-     * Delete messages in bulk with progress callback
-     */
-    async deleteMessages(
-        channelId: string,
-        messageIds: string[],
-        onProgress?: (progress: DeletionProgress) => void
-    ): Promise<DeletionProgress> {
-        this.isCancelled = false;
-        this.isPaused = false;
-
-        const progress: DeletionProgress = {
-            total: messageIds.length,
-            deleted: 0,
-            failed: 0,
-            status: 'running',
-        };
-
-        for (const messageId of messageIds) {
-            // Check for pause/cancel
-            while (this.isPaused && !this.isCancelled) {
-                progress.status = 'paused';
-                onProgress?.(progress);
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-
-            if (this.isCancelled) {
-                progress.status = 'failed';
-                onProgress?.(progress);
-                return progress;
-            }
-
-            progress.status = 'running';
-
-            try {
-                await this.deleteMessage(channelId, messageId);
-                progress.deleted++;
-            } catch (error) {
-                console.error(`Failed to delete message ${messageId}:`, error);
-                progress.failed++;
-            }
-
-            onProgress?.(progress);
-
-            // Rate limit: ~2 deletions per second is safe
-            await this.delay(0, 1100);
-        }
-
-        progress.status = 'completed';
-        onProgress?.(progress);
-        return progress;
-    }
-
-    /**
-     * Pause the deletion process
-     */
-    pause(): void {
-        this.isPaused = true;
-    }
-
-    /**
-     * Resume the deletion process
-     */
-    resume(): void {
-        this.isPaused = false;
-    }
-
-    /**
-     * Cancel the deletion process
-     */
-    cancel(): void {
-        this.isCancelled = true;
-    }
-
-    /**
      * Export messages to JSON
      */
     async exportMessages(
@@ -491,5 +407,3 @@ export class DiscordService {
         return this.request<DiscordUser>('GET', `/users/${userId}`);
     }
 }
-
-export default DiscordService;

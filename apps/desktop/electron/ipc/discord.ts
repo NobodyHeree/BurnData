@@ -20,9 +20,7 @@ export function registerDiscordHandlers(
     store: Store,
     jobManager: JobQueueManager
 ): void {
-    // ============================================
-    // Discord Login - Network Interception Method
-    // ============================================
+    // Login via network interception
     ipcMain.handle('discord:login', async () => {
         const partition = 'persist:discord_auth';
         const discordSession = session.fromPartition(partition);
@@ -181,10 +179,7 @@ export function registerDiscordHandlers(
         }
     });
 
-    // ============================================
-    // Deletion Control
-    // ============================================
-
+    // Deletion control
     ipcMain.handle('discord:startDeletion', async (_, config: unknown) => {
         const validConfig = validateIPC(schemas.discordDeletionConfig, config, 'discord:startDeletion');
         const jobId = crypto.randomUUID();
@@ -230,10 +225,7 @@ export function registerDiscordHandlers(
         return jobManager.resume();
     });
 
-    // ============================================
-    // Queue Management
-    // ============================================
-
+    // Queue management
     ipcMain.handle('discord:getQueueStatus', async () => {
         return jobManager.getQueueStatus();
     });
@@ -246,10 +238,7 @@ export function registerDiscordHandlers(
         return jobManager.clearQueue();
     });
 
-    // ============================================
-    // Job Persistence
-    // ============================================
-
+    // Persisted jobs (survive app restart)
     ipcMain.handle('discord:getPersistedJobs', async () => {
         const jobs = jobManager.loadPersistedJobs();
         const queue = jobManager.loadPersistedQueue();
@@ -303,10 +292,7 @@ export function registerDiscordHandlers(
         return { success: true };
     });
 
-    // ============================================
-    // Discord Data Package Import
-    // ============================================
-
+    // Data package import (ZIP)
     ipcMain.handle('discord:importDataPackage', async () => {
         const result = await dialog.showOpenDialog(mainWindow, {
             title: 'Import Discord Data Package',
