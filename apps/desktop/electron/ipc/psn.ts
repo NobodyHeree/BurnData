@@ -77,9 +77,11 @@ export function registerPSNHandlers(
             ]);
 
             const username = profile?.onlineId || 'PlayStation User';
+            const avatarUrl = profile?.avatarUrl;
             store.set('psn_username', username);
+            if (avatarUrl) store.set('psn_avatar', avatarUrl);
             console.log(`[PSN] Authenticated as ${username}. Found ${friends.length} friends.`);
-            return { success: true, friendCount: friends.length, username };
+            return { success: true, friendCount: friends.length, username, avatarUrl };
         } catch (err) {
             console.error('[PSN] Authentication failed:', err);
             return { success: false, error: String(err) };
@@ -91,7 +93,8 @@ export function registerPSNHandlers(
         const token = store.get('tokens.psn') as string;
         if (!token) return { authenticated: false };
         const username = (store.get('psn_username') as string) || 'PlayStation User';
-        return { authenticated: true, username };
+        const avatarUrl = store.get('psn_avatar') as string | undefined;
+        return { authenticated: true, username, avatarUrl };
     });
 
     // PSN: Get friends list

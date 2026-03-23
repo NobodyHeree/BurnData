@@ -133,7 +133,7 @@ export function PSNPage() {
 
         const authResult = await window.electronAPI.psn.isAuthenticated();
         if (authResult.authenticated && !platform?.connected) {
-            connectPlatform('psn', 'authenticated', { id: '', username: authResult.username || 'PlayStation User' });
+            connectPlatform('psn', 'authenticated', { id: '', username: authResult.username || 'PlayStation User', avatar: authResult.avatarUrl });
             loadFriends();
         } else if (!authResult.authenticated && platform?.connected) {
             // Token lost but platform still marked as connected - fix it
@@ -152,7 +152,8 @@ export function PSNPage() {
             if (result.success) {
                 connectPlatform('psn', 'authenticated', {
                     id: '',
-                    username: result.username || 'PlayStation User'
+                    username: result.username || 'PlayStation User',
+                    avatar: result.avatarUrl,
                 });
                 setNpssoToken('');
                 loadFriends();

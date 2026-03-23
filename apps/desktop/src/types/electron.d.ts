@@ -45,9 +45,9 @@ export interface ElectronAPI {
         }) => void) => () => void;
     };
     psn: {
-        login: (npssoToken: string) => Promise<{ success: boolean; friendCount?: number; username?: string; error?: string }>;
+        login: (npssoToken: string) => Promise<{ success: boolean; friendCount?: number; username?: string; avatarUrl?: string; error?: string }>;
         logout: () => Promise<boolean>;
-        isAuthenticated: () => Promise<{ authenticated: boolean; username?: string }>;
+        isAuthenticated: () => Promise<{ authenticated: boolean; username?: string; avatarUrl?: string }>;
         getFriends: () => Promise<{
             accountId: string;
             onlineId: string;

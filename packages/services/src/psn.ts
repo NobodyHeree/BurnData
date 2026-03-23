@@ -45,8 +45,10 @@ export interface PSNPresence {
 
 export class PSNService {
     private client: AxiosInstance;
+    private accessToken: string;
 
     constructor(accessToken: string) {
+        this.accessToken = accessToken;
         this.client = axios.create({
             baseURL: PSN_API_BASE,
             timeout: PSN_REQUEST_TIMEOUT_MS,
@@ -144,9 +146,20 @@ export class PSNService {
     /**
      * Get the current user's PSN profile (onlineId / username)
      */
-    async getMyProfile(): Promise<{ accountId: string; onlineId: string }> {
-        const response = await this.client.get('/users/me/profile');
-        return { accountId: response.data.accountId, onlineId: response.data.onlineId };
+    async getMyProfile(): Promise<{ accountId: string; onlineId: string; avatarUrl?: string }> {
+        // Extract accountId from JWT access token
+        const parts = this.accessToken.split('.');
+        if (parts.length < 2) throw new Error('Invalid access token format');
+        const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+        const accountId = payload.sub || payload.account_id;
+        if (!accountId) throw new Error('No accountId in token');
+
+        // Use getProfiles (which works) instead of /users/me/profile (which returns 403)
+        const profiles = await this.getProfiles([accountId]);
+        if (profiles.length > 0) {
+            return { accountId, onlineId: profiles[0].onlineId, avatarUrl: profiles[0].avatarUrl };
+        }
+        return { accountId, onlineId: 'Unknown' };
     }
 
     /**

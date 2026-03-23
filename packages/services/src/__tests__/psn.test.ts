@@ -381,16 +381,16 @@ describe('PSNService', () => {
 
 
     describe('getMyProfile', () => {
-        it('returns account ID and online ID', async () => {
-            const service = new PSNService('test-access-token');
+        it('extracts accountId from JWT and fetches profile', async () => {
+            const payload = Buffer.from(JSON.stringify({ sub: 'me-123' })).toString('base64');
+            const service = new PSNService(`header.${payload}.signature`);
 
             mockClient.get.mockResolvedValueOnce({
-                data: { accountId: 'me-123', onlineId: 'MyPSNName' },
+                data: { profiles: [{ accountId: 'me-123', onlineId: 'MyPSNName', avatars: [{ url: 'http://avatar.png' }] }] },
             });
 
             const profile = await service.getMyProfile();
-            expect(profile).toEqual({ accountId: 'me-123', onlineId: 'MyPSNName' });
-            expect(mockClient.get).toHaveBeenCalledWith('/users/me/profile');
+            expect(profile).toEqual({ accountId: 'me-123', onlineId: 'MyPSNName', avatarUrl: 'http://avatar.png' });
         });
     });
 

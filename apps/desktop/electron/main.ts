@@ -50,10 +50,10 @@ function createWindow() {
                     'Content-Security-Policy': [
                         "default-src 'self'; " +
                         "script-src 'self'; " +
-                        "style-src 'self' 'unsafe-inline'; " +
-                        "img-src 'self' data: https://cdn.discordapp.com https://image.api.playstation.com; " +
+                        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+                        "img-src 'self' data: https://*.discordapp.com https://*.discord.com https://*.playstation.com https://*.playstation.net http://*.playstation.net http://*.playstation.com; " +
                         "connect-src 'self' https://discord.com https://*.discord.com https://*.playstation.com; " +
-                        "font-src 'self'; " +
+                        "font-src 'self' https://fonts.gstatic.com; " +
                         "object-src 'none'; " +
                         "base-uri 'self'"
                     ],
@@ -68,9 +68,18 @@ function createWindow() {
     if (isDev) {
         const devServerUrl = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173';
         mainWindow.loadURL(devServerUrl);
+        mainWindow.webContents.openDevTools();
     } else {
         mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
     }
+
+    // Ctrl+Shift+I to toggle DevTools (works in production too)
+    mainWindow.webContents.on('before-input-event', (event, input) => {
+        if (input.control && input.shift && input.key.toLowerCase() === 'i') {
+            mainWindow!.webContents.toggleDevTools();
+            event.preventDefault();
+        }
+    });
 
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         shell.openExternal(url);

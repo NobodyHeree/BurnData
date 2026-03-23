@@ -178,10 +178,17 @@ export function Dashboard() {
                                 {/* User info if connected */}
                                 {platform.connected && platform.user && (
                                     <div className="flex items-center gap-2 mb-4 p-2 bg-dark-900 border border-dark-700">
-                                        <div className="w-6 h-6 flex items-center justify-center text-xs font-black text-fire"
-                                            style={{ background: 'rgba(255,59,0,0.15)' }}>
-                                            {platform.user.username.charAt(0).toUpperCase()}
-                                        </div>
+                                        {platform.user.avatar ? (
+                                            <img src={platform.id === 'discord' && platform.user.avatar && !platform.user.avatar.startsWith('http')
+                                                ? `https://cdn.discordapp.com/avatars/${platform.user.id}/${platform.user.avatar}.png?size=32`
+                                                : platform.user.avatar}
+                                                className="w-6 h-6 rounded-full" alt="" />
+                                        ) : (
+                                            <div className="w-6 h-6 flex items-center justify-center text-xs font-black text-fire rounded-full"
+                                                style={{ background: 'rgba(255,59,0,0.15)' }}>
+                                                {platform.user.username.charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
                                         <span className="text-sm text-burn-text font-mono">{platform.user.username}</span>
                                     </div>
                                 )}

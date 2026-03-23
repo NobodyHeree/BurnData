@@ -61,3 +61,5 @@ apps/cli/*.log
 
 # Legacy
 redact-clone/
+REVIEW-GUIDELINES.md
+REVIEW-PLAN.md
