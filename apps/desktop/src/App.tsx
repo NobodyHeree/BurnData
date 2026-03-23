@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { TitleBar } from './components/TitleBar';
 import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './pages/Dashboard';
@@ -13,7 +13,7 @@ import { ToastContainer } from './components/Toast';
 
 function App() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <JobManager />
             <PSNPresenceManager />
             <ToastContainer />
@@ -38,7 +38,7 @@ function App() {
                     </main>
                 </div>
             </div>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 
