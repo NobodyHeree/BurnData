@@ -54,11 +54,17 @@ Grab the latest installer from [**Releases**](https://github.com/NobodyHeree/Bur
 
 > Windows only for now. macOS/Linux coming later.
 
+### Windows SmartScreen
+
+Since the app isn't signed with a paid certificate (like most open-source projects), Windows may show a SmartScreen warning on first launch. This is normal — just click **"More info"** then **"Run anyway"**.
+
+The app is fully open-source — you can inspect the code or [build from source](#build-from-source) if you prefer.
+
 ## Build from source
 
 ```bash
 git clone https://github.com/NobodyHeree/BurnData.git
-cd DeleteData
+cd BurnData
 pnpm install
 pnpm dev
 ```
