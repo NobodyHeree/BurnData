@@ -6,7 +6,13 @@ import { encryptString, decryptString } from '../services/encryption';
 import { JobQueueManager } from '../services/jobQueue';
 import { validateIPC, schemas } from '../utils/validate';
 
-function getDiscordService(store: Store): DiscordService {
+async function getDiscordService(store: Store): Promise<DiscordService> {
+    const mockMode = store.get('devMockDiscord') as boolean;
+    if (mockMode) {
+        const { MockDiscordService } = await import('../services/mockDiscord');
+        console.log('[Mock] Using MockDiscordService for IPC call');
+        return new MockDiscordService('mock-token') as any;
+    }
     const encrypted = store.get('tokens.discord') as string;
     if (!encrypted) throw new Error('No Discord token found. Please log in again.');
     const token = decryptString(encrypted);
@@ -20,6 +26,12 @@ export function registerDiscordHandlers(
 ): void {
     // Login via network interception
     ipcMain.handle('discord:login', async () => {
+        const mockMode = store.get('devMockDiscord') as boolean;
+        if (mockMode) {
+            console.log('[Mock] Skipping login — returning mock token');
+            return { success: true, token: 'mock-token' };
+        }
+
         const partition = 'persist:discord_auth';
         const discordSession = session.fromPartition(partition);
 
@@ -114,7 +126,7 @@ export function registerDiscordHandlers(
     // Get Guilds
     ipcMain.handle('discord:getGuilds', async () => {
         try {
-            const service = getDiscordService(store);
+            const service = await getDiscordService(store);
             const guilds = await service.getGuilds();
             console.log(`[Discord] Fetched ${guilds.length} guilds`);
             return guilds;
@@ -127,7 +139,7 @@ export function registerDiscordHandlers(
     // Get DMs
     ipcMain.handle('discord:getDMs', async () => {
         try {
-            const service = getDiscordService(store);
+            const service = await getDiscordService(store);
             const dms = await service.getDMChannels();
             console.log(`[Discord] Fetched ${dms.length} DMs`);
             return dms;
@@ -141,7 +153,7 @@ export function registerDiscordHandlers(
     ipcMain.handle('discord:getGuildChannels', async (_, guildId: unknown) => {
         const validGuildId = validateIPC(schemas.discordGuildId, guildId, 'discord:getGuildChannels');
         try {
-            const service = getDiscordService(store);
+            const service = await getDiscordService(store);
             const channels = await service.getGuildChannels(validGuildId);
             console.log(`[Discord] Fetched ${channels.length} channels for guild ${validGuildId}`);
             return channels;
@@ -155,7 +167,7 @@ export function registerDiscordHandlers(
     ipcMain.handle('discord:createDM', async (_, userId: unknown) => {
         const validUserId = validateIPC(schemas.discordUserId, userId, 'discord:createDM');
         try {
-            const service = getDiscordService(store);
+            const service = await getDiscordService(store);
 
             const channel = await service.createDMChannel(validUserId);
             console.log(`[Discord] Created/Retrieved DM channel ${channel.id} for user ${validUserId}`);
@@ -182,19 +194,26 @@ export function registerDiscordHandlers(
         const validConfig = validateIPC(schemas.discordDeletionConfig, config, 'discord:startDeletion');
         const jobId = crypto.randomUUID();
 
-        // Get token first
-        const encrypted = store.get('tokens.discord') as string;
-        if (!encrypted) {
-            console.error('[BackgroundJob] Start failed: No token found in store');
-            throw new Error('No authentication token found. Please log in again.');
-        }
-
+        const mockMode = store.get('devMockDiscord') as boolean;
         let token: string;
-        try {
-            token = decryptString(encrypted);
-        } catch (err) {
-            console.error('[BackgroundJob] Token decryption failed:', err);
-            throw new Error('Failed to decrypt authentication token. Please log out and back in.');
+
+        if (mockMode) {
+            token = 'mock-token';
+            console.log('[Mock] Starting deletion job in mock mode');
+        } else {
+            // Get token first
+            const encrypted = store.get('tokens.discord') as string;
+            if (!encrypted) {
+                console.error('[BackgroundJob] Start failed: No token found in store');
+                throw new Error('No authentication token found. Please log in again.');
+            }
+
+            try {
+                token = decryptString(encrypted);
+            } catch (err) {
+                console.error('[BackgroundJob] Token decryption failed:', err);
+                throw new Error('Failed to decrypt authentication token. Please log out and back in.');
+            }
         }
 
         // If a job is already running, add to queue
@@ -253,16 +272,22 @@ export function registerDiscordHandlers(
         }
 
         // Get token
-        const encrypted = store.get('tokens.discord') as string;
-        if (!encrypted) {
-            return { success: false, error: 'No Discord token found' };
-        }
-
+        const mockMode = store.get('devMockDiscord') as boolean;
         let token: string;
-        try {
-            token = decryptString(encrypted);
-        } catch (err) {
-            return { success: false, error: 'Failed to decrypt token' };
+
+        if (mockMode) {
+            token = 'mock-token';
+        } else {
+            const encrypted = store.get('tokens.discord') as string;
+            if (!encrypted) {
+                return { success: false, error: 'No Discord token found' };
+            }
+
+            try {
+                token = decryptString(encrypted);
+            } catch (err) {
+                return { success: false, error: 'Failed to decrypt token' };
+            }
         }
 
         // If another job is running, queue this one

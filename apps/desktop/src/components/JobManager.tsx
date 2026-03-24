@@ -10,7 +10,8 @@ export const JobManager = () => {
                 const jobStatus =
                     data.status === 'Completed' ? 'completed' :
                         data.status === 'Error' ? 'failed' :
-                            data.status === 'Paused' ? 'paused' : 'running';
+                            data.status === 'Stopped' ? 'failed' :
+                                data.status === 'Paused' ? 'paused' : 'running';
 
                 // Check if we need to update Platform Stats (only on first transition to Completed/Failed)
                 const currentJob = useAppStore.getState().jobs.find(j => j.id === data.jobId);
@@ -33,7 +34,7 @@ export const JobManager = () => {
                     status: jobStatus,
                     progress: data.progress,
                     deletedItems: data.stats?.deleted || 0,
-                    error: data.status === 'Error' ? data.details : undefined,
+                    error: data.status === 'Error' ? data.details : data.status === 'Stopped' ? data.details : undefined,
                     currentChannel: data.stats?.currentChannel,
                     speed: data.stats?.eta ?? undefined,
                     completedAt: jobStatus === 'completed' || jobStatus === 'failed' ? new Date().toISOString() : undefined

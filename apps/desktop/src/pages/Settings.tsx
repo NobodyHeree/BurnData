@@ -9,8 +9,10 @@ import {
     AlertTriangle,
     Gauge
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppStore, DeletionSpeed } from '../store/appStore';
+
+const isDev = !!(import.meta as any).env?.DEV;
 
 export const Settings = () => {
     const platforms = useAppStore((state) => state.platforms);
@@ -18,6 +20,21 @@ export const Settings = () => {
     const settings = useAppStore((state) => state.settings);
     const updateSettings = useAppStore((state) => state.updateSettings);
     const addToast = useAppStore((state) => state.addToast);
+
+    const [mockDiscord, setMockDiscord] = useState(false);
+    useEffect(() => {
+        if (isDev && window.electronAPI) {
+            window.electronAPI.store.get('devMockDiscord').then((val) => setMockDiscord(!!val));
+        }
+    }, []);
+    const toggleMockDiscord = async () => {
+        const next = !mockDiscord;
+        setMockDiscord(next);
+        if (window.electronAPI) {
+            await window.electronAPI.store.set('devMockDiscord', next);
+        }
+        addToast({ message: next ? 'Mock Discord enabled — re-login to use fake data' : 'Mock Discord disabled', type: 'info' });
+    };
 
     const [showClearConfirm, setShowClearConfirm] = useState(false);
 
@@ -252,6 +269,39 @@ export const Settings = () => {
                     )}
                 </div>
             </section>
+
+            {/* Developer Tools (dev mode only) */}
+            {isDev && (
+                <section className="glass-card p-6 border border-gold/20">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2" style={{ background: 'rgba(255,184,0,0.1)' }}>
+                            <AlertTriangle className="w-5 h-5 text-gold" />
+                        </div>
+                        <div>
+                            <h2 className="font-heading text-xl font-black uppercase tracking-wider text-gold">Developer</h2>
+                            <p className="text-sm text-burn-muted">Testing tools — only visible in dev mode</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between p-4 bg-dark-800/50 border border-dark-700">
+                            <div>
+                                <p className="font-bold text-burn-cream">Mock Discord</p>
+                                <p className="text-sm text-burn-muted">
+                                    Use fake guilds, channels, DMs and messages instead of real Discord API.
+                                    Simulates 403 errors, empty channels, rate limits.
+                                </p>
+                            </div>
+                            <button
+                                onClick={toggleMockDiscord}
+                                className={`relative w-12 h-6 rounded-full transition-colors ${mockDiscord ? 'bg-gold' : 'bg-dark-600'}`}
+                            >
+                                <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${mockDiscord ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* About */}
             <section className="glass-card p-6">

@@ -283,6 +283,7 @@ export class JobQueueManager {
             totalDeleted: number;
             cancelled: () => boolean;
             paused: () => boolean;
+            onChannelDone: () => void;
             onDelete: (channelName: string) => void;
             onProgress: (channelName: string, checked: number, found: number, deleted: number) => void;
         },
@@ -321,6 +322,7 @@ export class JobQueueManager {
                     sharedState.onProgress(target.name, channelChecked, channelFound, channelDeleted);
                 }
             }
+            sharedState.onChannelDone();
             return channelDeleted;
         }
 
@@ -329,7 +331,18 @@ export class JobQueueManager {
         let keepScanning = true;
 
         while (keepScanning && !sharedState.cancelled()) {
-            const batch = await service.getChannelMessages(target.channelId, 100, lastMsgId);
+            let batch;
+            try {
+                batch = await service.getChannelMessages(target.channelId, 100, lastMsgId);
+            } catch (e: any) {
+                const status = e?.response?.status;
+                if (status === 403 || status === 404) {
+                    console.log(`[Channel ${target.name}] Skipping — no access (${status})`);
+                    sharedState.onChannelDone();
+                    return channelDeleted;
+                }
+                throw e;
+            }
             if (batch.length === 0) break;
 
             channelChecked += batch.length;
@@ -374,6 +387,7 @@ export class JobQueueManager {
             await new Promise(r => setTimeout(r, 200));
         }
 
+        sharedState.onChannelDone();
         return channelDeleted;
     }
 
@@ -398,7 +412,15 @@ export class JobQueueManager {
         };
 
         try {
-            const service = new DiscordService(token);
+            let service: DiscordService;
+            const mockMode = this.store.get('devMockDiscord') as boolean;
+            if (mockMode) {
+                const { MockDiscordService } = await import('./mockDiscord');
+                service = new MockDiscordService(token) as any;
+                console.log('[Mock] Using MockDiscordService for job', jobId);
+            } else {
+                service = new DiscordService(token);
+            }
             const user = await service.getMe();
 
             // 1. Resolve Targets
@@ -453,10 +475,15 @@ export class JobQueueManager {
                 : undefined;
 
             // Shared mutable state for parallel workers
+            let channelsProcessed = 0;
+            const totalChannels = targets.length - startTargetIndex;
+            const calcProgress = () => totalChannels > 0 ? Math.min(99, Math.round((channelsProcessed / totalChannels) * 100)) : 0;
+
             const sharedState = {
                 totalDeleted,
                 cancelled: () => this.deletionController.cancelled,
                 paused: () => this.deletionController.paused,
+                onChannelDone: () => { channelsProcessed++; },
                 onDelete: (channelName: string) => {
                     sharedState.totalDeleted++;
                     totalDeleted = sharedState.totalDeleted;
@@ -465,7 +492,7 @@ export class JobQueueManager {
                     const rate = totalDeleted / elapsedSec;
                     const etaStr = rate > 0 ? `${rate.toFixed(1)} msg/s` : null;
 
-                    sendProgress('Deleting', -1, {
+                    sendProgress('Deleting', calcProgress(), {
                         deleted: totalDeleted,
                         checked: 0,
                         currentChannel: channelName,
@@ -481,7 +508,7 @@ export class JobQueueManager {
                     }
                 },
                 onProgress: (channelName: string, checked: number, found: number, deleted: number) => {
-                    sendProgress('Scanning', -1, {
+                    sendProgress('Scanning', calcProgress(), {
                         deleted: totalDeleted,
                         checked,
                         currentChannel: channelName,
@@ -515,7 +542,11 @@ export class JobQueueManager {
                 await Promise.all(promises);
             }
 
-            sendProgress('Completed', 100, { deleted: totalDeleted, checked: 0 }, `Done! Deleted ${totalDeleted} messages across ${targets.length} channels.`);
+            if (this.deletionController.cancelled) {
+                sendProgress('Stopped', calcProgress(), { deleted: totalDeleted, checked: 0 }, `Stopped by user. Deleted ${totalDeleted} messages.`);
+            } else {
+                sendProgress('Completed', 100, { deleted: totalDeleted, checked: 0 }, `Done! Deleted ${totalDeleted} messages across ${targets.length} channels.`);
+            }
             this.removePersistedJob(jobId);
 
         } catch (err: any) {
@@ -523,7 +554,7 @@ export class JobQueueManager {
                 err.config.headers['Authorization'] = '[REDACTED]';
             }
             console.error('Deletion Exception:', err instanceof Error ? err.message : err);
-            sendProgress('Error', 0, { deleted: 0, checked: 0 }, `Failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+            sendProgress('Error', 0, { deleted: totalDeleted, checked: 0 }, `Failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
         } finally {
             this.deletionController.active = false;
             this.deletionController.currentJobId = undefined;
