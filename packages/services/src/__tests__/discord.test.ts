@@ -290,11 +290,11 @@ describe('DiscordService', () => {
             expect(result).toBe(true);
         });
 
-        it('returns true when forbidden (403) - skips gracefully', async () => {
+        it('returns false when forbidden (403)', async () => {
             mockedAxios.mockRejectedValueOnce(makeAxiosError(403));
 
             const result = await service.deleteMessage('ch1', 'msg1');
-            expect(result).toBe(true);
+            expect(result).toBe(false);
         });
 
         it('throws on persistent server errors after all retries', { timeout: 30000 }, async () => {
