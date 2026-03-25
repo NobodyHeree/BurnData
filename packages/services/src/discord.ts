@@ -68,6 +68,7 @@ export interface RateLimitInfo {
 export interface DeleteResult {
     success: boolean;
     alreadyDeleted?: boolean;
+    forbidden?: boolean;
     rateLimits: RateLimitInfo;
 }
 
@@ -237,8 +238,10 @@ export class DiscordService {
             return true;
         } catch (error) {
             const axiosError = error as AxiosError;
-            // 404 = already deleted, 403 = no permission - skip both gracefully
-            if (axiosError.response?.status === 404 || axiosError.response?.status === 403) return true;
+            // 404 = already deleted — skip gracefully
+            if (axiosError.response?.status === 404) return true;
+            // 403 = no permission or throttled — report as failure
+            if (axiosError.response?.status === 403) return false;
             throw error;
         }
     }
@@ -250,10 +253,17 @@ export class DiscordService {
             return { success: true, rateLimits: result.rateLimits };
         } catch (error) {
             const axiosError = error as AxiosError;
-            if (axiosError.response?.status === 404 || axiosError.response?.status === 403) {
+            if (axiosError.response?.status === 404) {
                 return {
                     success: true,
                     alreadyDeleted: true,
+                    rateLimits: this.parseRateLimitHeaders(axiosError.response.headers || {}),
+                };
+            }
+            if (axiosError.response?.status === 403) {
+                return {
+                    success: false,
+                    forbidden: true,
                     rateLimits: this.parseRateLimitHeaders(axiosError.response.headers || {}),
                 };
             }

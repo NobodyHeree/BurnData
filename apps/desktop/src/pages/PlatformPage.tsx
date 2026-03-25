@@ -855,6 +855,7 @@ export function PlatformPage() {
                     updateJob(jobId, { currentChannel: `Deleting ${allMessages.length.toLocaleString()} messages...` });
                     let totalDeleted = 0;
                     let totalFailed = 0;
+                    let consecutive403 = 0;
 
                     for (const { channelId, messageId } of allMessages) {
                         // Stop check
@@ -880,6 +881,7 @@ export function PlatformPage() {
                         }
 
                         let wasAlreadyDeleted = false;
+                        let wasForbidden = false;
                         let rateLimitRemaining: number | null = null;
                         let rateLimitResetMs: number | null = null;
                         try {
@@ -889,14 +891,25 @@ export function PlatformPage() {
                             if (result.alreadyDeleted) {
                                 wasAlreadyDeleted = true;
                                 totalDeleted++;
+                            } else if (result.forbidden) {
+                                wasForbidden = true;
+                                consecutive403++;
+                                totalFailed++;
                             } else if (result.success) {
                                 totalDeleted++;
+                                consecutive403 = 0;
                                 markDeleted(channelId, messageId);
                             } else {
                                 totalFailed++;
                             }
                         } catch {
                             totalFailed++;
+                        }
+
+                        // Too many 403s in a row — Discord is throttling, skip this channel
+                        if (consecutive403 >= 5) {
+                            console.log(`[Browser] 5 consecutive 403s on channel ${channelId} — skipping`);
+                            break;
                         }
 
                         const processed = totalDeleted + totalFailed;
@@ -906,7 +919,11 @@ export function PlatformPage() {
                             progress: Math.round(processed / allMessages.length * 100),
                         });
 
-                        if (wasAlreadyDeleted) {
+                        if (wasForbidden) {
+                            // Exponential backoff on 403: 2s, 4s, 8s, 16s, 30s
+                            const backoffMs = Math.min(2000 * Math.pow(2, consecutive403 - 1), 30000);
+                            await new Promise(r => setTimeout(r, backoffMs));
+                        } else if (wasAlreadyDeleted) {
                             await new Promise(r => setTimeout(r, 50));
                         } else if (rateLimitRemaining !== null && rateLimitRemaining <= 1 && rateLimitResetMs) {
                             // Almost out of rate limit budget — wait for reset

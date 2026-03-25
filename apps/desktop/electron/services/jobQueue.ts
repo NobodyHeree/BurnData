@@ -292,6 +292,26 @@ export class JobQueueManager {
         let channelDeleted = 0;
         let channelChecked = 0;
         let channelFound = 0;
+        let consecutive403 = 0;
+        const MAX_CONSECUTIVE_403 = 5;
+
+        // Handle delete result: backoff on 403, reset counter on success
+        const handleDeleteResult = async (result: { success: boolean; forbidden?: boolean; rateLimits: any }, label: string): Promise<boolean> => {
+            if (result.forbidden) {
+                consecutive403++;
+                if (consecutive403 >= MAX_CONSECUTIVE_403) {
+                    console.log(`[Channel ${label}] ${MAX_CONSECUTIVE_403} consecutive 403s — skipping channel (likely blocked)`);
+                    return false; // signal to stop this channel
+                }
+                // Exponential backoff: 2s, 4s, 8s, 16s, 32s
+                const backoffMs = Math.min(2000 * Math.pow(2, consecutive403 - 1), 30000);
+                console.log(`[Channel ${label}] 403 on delete (${consecutive403}/${MAX_CONSECUTIVE_403}) — backing off ${backoffMs}ms`);
+                await new Promise(r => setTimeout(r, backoffMs));
+                return true; // keep going
+            }
+            if (result.success) consecutive403 = 0;
+            return true;
+        };
 
         // Data Package mode: we already have message IDs, skip scanning
         if (preloadedMessageIds && preloadedMessageIds.length > 0) {
@@ -312,8 +332,12 @@ export class JobQueueManager {
                         channelDeleted++;
                         sharedState.onDelete(target.name);
                     }
-                    const delay = this.calculateDynamicDelay(result.rateLimits, preset);
-                    await new Promise(r => setTimeout(r, delay));
+                    const shouldContinue = await handleDeleteResult(result, target.name);
+                    if (!shouldContinue) break;
+                    if (!result.forbidden) {
+                        const delay = this.calculateDynamicDelay(result.rateLimits, preset);
+                        await new Promise(r => setTimeout(r, delay));
+                    }
                 } catch (e) {
                     console.error(`[Channel ${target.name}] Delete failed for ${messageId}:`, e);
                 }
@@ -376,9 +400,12 @@ export class JobQueueManager {
                         channelDeleted++;
                         sharedState.onDelete(target.name);
                     }
-
-                    const delay = this.calculateDynamicDelay(result.rateLimits, preset);
-                    await new Promise(r => setTimeout(r, delay));
+                    const shouldContinue = await handleDeleteResult(result, target.name);
+                    if (!shouldContinue) { keepScanning = false; break; }
+                    if (!result.forbidden) {
+                        const delay = this.calculateDynamicDelay(result.rateLimits, preset);
+                        await new Promise(r => setTimeout(r, delay));
+                    }
                 } catch (e) {
                     console.error(`[Channel ${target.name}] Delete failed:`, e);
                 }
