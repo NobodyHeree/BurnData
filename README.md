@@ -10,7 +10,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Windows-blue?logo=windows&logoColor=white" />
-  <img src="https://img.shields.io/badge/version-1.0.0-orange" />
+  <img src="https://img.shields.io/badge/version-1.0.1-orange" />
   <img src="https://img.shields.io/github/license/NobodyHeree/BurnData?color=green" />
   <img src="https://img.shields.io/badge/electron-28-blueviolet?logo=electron&logoColor=white" />
 </p>
